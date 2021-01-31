@@ -22,12 +22,17 @@ public:
 	ASTUBaseCharacter();
 
 protected:
+	UPROPERTY(EditAnywhere)
+	float ShiftSpeed = 1000.f;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	bool IsShifting;
+	
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category="Components")
 	UCameraComponent* Camera;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category="Components")
 	USpringArmComponent* SpringArm;
-
 
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -40,6 +45,10 @@ public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 private:
+	
+	float DefaultWalkSpeed;
 	void MoveForward(float Axis);
 	void MoveRight(float Axis);
+	void StartShift();
+	void StopShift();
 };

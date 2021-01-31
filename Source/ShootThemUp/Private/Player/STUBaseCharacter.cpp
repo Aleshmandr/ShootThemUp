@@ -3,7 +3,10 @@
 
 #include "STUBaseCharacter.h"
 #include "Camera/CameraComponent.h"
+#include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/SpringArmComponent.h"
+
+DEFINE_LOG_CATEGORY_STATIC(LogCharacter, All, All)
 
 // Sets default values
 ASTUBaseCharacter::ASTUBaseCharacter()
@@ -16,7 +19,6 @@ ASTUBaseCharacter::ASTUBaseCharacter()
 	SpringArm->bUsePawnControlRotation = true;
 	Camera = CreateDefaultSubobject<UCameraComponent>("Camera");
 	Camera->SetupAttachment(SpringArm);
-	
 }
 
 // Called when the game starts or when spawned
@@ -39,7 +41,9 @@ void ASTUBaseCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 	PlayerInputComponent->BindAxis("MoveRight", this, &ASTUBaseCharacter::MoveRight);
 	PlayerInputComponent->BindAxis("LookUp", this, &ASTUBaseCharacter::AddControllerPitchInput);
 	PlayerInputComponent->BindAxis("TurnAround", this, &ASTUBaseCharacter::AddControllerYawInput);
-	PlayerInputComponent->BindAction("Jump", EInputEvent::IE_Pressed, this,  &ASTUBaseCharacter::Jump);
+	PlayerInputComponent->BindAction("Jump", EInputEvent::IE_Pressed, this, &ASTUBaseCharacter::Jump);
+	PlayerInputComponent->BindAction("Shift", EInputEvent::IE_Pressed, this, &ASTUBaseCharacter::StartShift);
+	PlayerInputComponent->BindAction("Shift", EInputEvent::IE_Released, this, &ASTUBaseCharacter::StopShift);
 }
 
 void ASTUBaseCharacter::MoveForward(float Axis)
@@ -50,4 +54,23 @@ void ASTUBaseCharacter::MoveForward(float Axis)
 void ASTUBaseCharacter::MoveRight(float Axis)
 {
 	AddMovementInput(GetActorRightVector(), Axis);
+}
+
+void ASTUBaseCharacter::StartShift()
+{
+	if (GetCharacterMovement())
+	{
+		IsShifting = true;
+		DefaultWalkSpeed = GetCharacterMovement()->MaxWalkSpeed;
+		GetCharacterMovement()->MaxWalkSpeed = ShiftSpeed;
+	}
+}
+
+void ASTUBaseCharacter::StopShift()
+{
+	if (GetCharacterMovement())
+	{
+		IsShifting = false;
+		GetCharacterMovement()->MaxWalkSpeed = DefaultWalkSpeed;
+	}
 }
