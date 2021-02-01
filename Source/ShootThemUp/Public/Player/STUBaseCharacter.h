@@ -3,10 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-
 #include "GameFramework/Character.h"
-
-
 #include "STUBaseCharacter.generated.h"
 
 class UCameraComponent;
@@ -18,15 +15,13 @@ class SHOOTTHEMUP_API ASTUBaseCharacter : public ACharacter
 	GENERATED_BODY()
 
 public:
-	// Sets default values for this character's properties
-	ASTUBaseCharacter();
-
-protected:
-	UPROPERTY(EditAnywhere)
-	float ShiftSpeed = 1000.f;
-
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	bool IsShifting;
+	
+	// Sets default values for this character's properties
+	ASTUBaseCharacter(const FObjectInitializer& ObjInitializer);
+
+protected:
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category="Components")
 	UCameraComponent* Camera;
