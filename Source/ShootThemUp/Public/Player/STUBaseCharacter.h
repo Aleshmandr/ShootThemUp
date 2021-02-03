@@ -15,8 +15,6 @@ class SHOOTTHEMUP_API ASTUBaseCharacter : public ACharacter
 	GENERATED_BODY()
 
 public:
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
-	bool IsShifting;
 	
 	// Sets default values for this character's properties
 	ASTUBaseCharacter(const FObjectInitializer& ObjInitializer);
@@ -41,7 +39,6 @@ public:
 
 private:
 	
-	float DefaultWalkSpeed;
 	void MoveForward(float Axis);
 	void MoveRight(float Axis);
 	void StartShift();

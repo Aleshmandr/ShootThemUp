@@ -16,6 +16,9 @@ class SHOOTTHEMUP_API USTUCharacterMovementComponent : public UCharacterMovement
 
 public:
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	bool IsShifting;
+	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Movement", meta = (ClampMin = "1"))
 	float ShiftSpeedMultiplier = 2.f;
 

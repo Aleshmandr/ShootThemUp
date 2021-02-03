@@ -61,10 +61,18 @@ void ASTUBaseCharacter::MoveRight(float Axis)
 
 void ASTUBaseCharacter::StartShift()
 {
-	IsShifting = true;
+	USTUCharacterMovementComponent* MoveComponent = Cast<USTUCharacterMovementComponent>(GetMovementComponent());
+	if(MoveComponent)
+	{
+		MoveComponent->IsShifting = true;
+	}
 }
 
 void ASTUBaseCharacter::StopShift()
 {
-	IsShifting = false;
+	USTUCharacterMovementComponent* MoveComponent = Cast<USTUCharacterMovementComponent>(GetMovementComponent());
+	if(MoveComponent)
+	{
+		MoveComponent->IsShifting = false;
+	}
 }
