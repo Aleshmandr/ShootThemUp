@@ -3,10 +3,15 @@
 
 #include "STUBaseCharacter.h"
 
+#include <string>
+
+
 #include "STUCharacterMovementComponent.h"
 #include "Camera/CameraComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/SpringArmComponent.h"
+#include "STUHealthComponent.h"
+#include "Components/TextRenderComponent.h"
 
 DEFINE_LOG_CATEGORY_STATIC(LogCharacter, All, All)
 
@@ -17,23 +22,30 @@ ASTUBaseCharacter::ASTUBaseCharacter(const FObjectInitializer& ObjInitializer): 
 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	SpringArm = CreateDefaultSubobject<USpringArmComponent>("SpringArm");
-	SpringArm->SetupAttachment(GetRootComponent());
-	SpringArm->bUsePawnControlRotation = true;
-	Camera = CreateDefaultSubobject<UCameraComponent>("Camera");
-	Camera->SetupAttachment(SpringArm);
+	SpringArmComponent = CreateDefaultSubobject<USpringArmComponent>("SpringArm");
+	SpringArmComponent->SetupAttachment(GetRootComponent());
+	SpringArmComponent->bUsePawnControlRotation = true;
+	CameraComponent = CreateDefaultSubobject<UCameraComponent>("Camera");
+	CameraComponent->SetupAttachment(SpringArmComponent);
+	
+	HealthComponent = CreateDefaultSubobject<USTUHealthComponent>("Health");
+	HealthTextComponent = CreateDefaultSubobject<UTextRenderComponent>("HealthText");
+	HealthTextComponent->SetupAttachment(GetRootComponent());
 }
 
 // Called when the game starts or when spawned
 void ASTUBaseCharacter::BeginPlay()
 {
 	Super::BeginPlay();
+	check(HealthComponent);
 }
 
 // Called every frame
 void ASTUBaseCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+	const auto Health = HealthComponent->GetHealth();
+	HealthTextComponent->SetText(FText::FromString(FString::Printf(TEXT("%.0f"), Health)));
 }
 
 // Called to bind functionality to input
