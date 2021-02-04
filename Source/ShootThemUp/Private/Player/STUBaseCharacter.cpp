@@ -2,10 +2,6 @@
 
 
 #include "STUBaseCharacter.h"
-
-#include <string>
-
-
 #include "STUCharacterMovementComponent.h"
 #include "Camera/CameraComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
@@ -27,7 +23,7 @@ ASTUBaseCharacter::ASTUBaseCharacter(const FObjectInitializer& ObjInitializer): 
 	SpringArmComponent->bUsePawnControlRotation = true;
 	CameraComponent = CreateDefaultSubobject<UCameraComponent>("Camera");
 	CameraComponent->SetupAttachment(SpringArmComponent);
-	
+
 	HealthComponent = CreateDefaultSubobject<USTUHealthComponent>("Health");
 	HealthTextComponent = CreateDefaultSubobject<UTextRenderComponent>("HealthText");
 	HealthTextComponent->SetupAttachment(GetRootComponent());
@@ -46,6 +42,7 @@ void ASTUBaseCharacter::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 	const auto Health = HealthComponent->GetHealth();
 	HealthTextComponent->SetText(FText::FromString(FString::Printf(TEXT("%.0f"), Health)));
+	TakeDamage(0.1f, FDamageEvent{}, Controller, this);
 }
 
 // Called to bind functionality to input
@@ -74,7 +71,7 @@ void ASTUBaseCharacter::MoveRight(float Axis)
 void ASTUBaseCharacter::StartShift()
 {
 	USTUCharacterMovementComponent* MoveComponent = Cast<USTUCharacterMovementComponent>(GetMovementComponent());
-	if(MoveComponent)
+	if (MoveComponent)
 	{
 		MoveComponent->IsShifting = true;
 	}
@@ -83,7 +80,7 @@ void ASTUBaseCharacter::StartShift()
 void ASTUBaseCharacter::StopShift()
 {
 	USTUCharacterMovementComponent* MoveComponent = Cast<USTUCharacterMovementComponent>(GetMovementComponent());
-	if(MoveComponent)
+	if (MoveComponent)
 	{
 		MoveComponent->IsShifting = false;
 	}
