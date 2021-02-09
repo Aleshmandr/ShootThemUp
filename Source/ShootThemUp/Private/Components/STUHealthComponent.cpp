@@ -25,5 +25,6 @@ void USTUHealthComponent::BeginPlay()
 void USTUHealthComponent::HandleTakeAnyDamage(AActor* DamagedActor, float Damage, const UDamageType* DamageType,
                                                 AController* InstigatedBy, AActor* DamageCauser)
 {
+	UE_LOG(LogHealth, Log, TEXT("HandleTakeAnyDamage %f"), Damage)
 	Health -= Damage;
 }
