@@ -22,6 +22,8 @@ public:
 	float Damage = 1;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	bool DoFullDamage = true;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TSubclassOf<UDamageType> DamageType;
 
 	ASTUDevDamageActor();
 
