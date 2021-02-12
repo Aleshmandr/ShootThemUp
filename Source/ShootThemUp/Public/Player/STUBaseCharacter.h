@@ -46,7 +46,7 @@ public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 private:
-	
+	bool WantShift;
 	void MoveForward(float Axis);
 	void MoveRight(float Axis);
 	void StartShift();

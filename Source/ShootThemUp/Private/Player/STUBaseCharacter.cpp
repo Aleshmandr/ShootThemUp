@@ -61,24 +61,31 @@ void ASTUBaseCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 void ASTUBaseCharacter::MoveForward(float Axis)
 {
 	AddMovementInput(GetActorForwardVector(), Axis);
+	USTUCharacterMovementComponent* MoveComponent = Cast<USTUCharacterMovementComponent>(GetMovementComponent());
+	if (MoveComponent)
+	{
+		MoveComponent->IsShifting = WantShift && Axis > 0;
+	}
 }
 
 void ASTUBaseCharacter::MoveRight(float Axis)
 {
+	USTUCharacterMovementComponent* MoveComponent = Cast<USTUCharacterMovementComponent>(GetMovementComponent());
+	if (MoveComponent && MoveComponent->IsShifting)
+	{
+		return;
+	}
 	AddMovementInput(GetActorRightVector(), Axis);
 }
 
 void ASTUBaseCharacter::StartShift()
 {
-	USTUCharacterMovementComponent* MoveComponent = Cast<USTUCharacterMovementComponent>(GetMovementComponent());
-	if (MoveComponent)
-	{
-		MoveComponent->IsShifting = true;
-	}
+	WantShift = true;
 }
 
 void ASTUBaseCharacter::StopShift()
 {
+	WantShift = false;
 	USTUCharacterMovementComponent* MoveComponent = Cast<USTUCharacterMovementComponent>(GetMovementComponent());
 	if (MoveComponent)
 	{
