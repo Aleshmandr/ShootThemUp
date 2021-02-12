@@ -34,15 +34,29 @@ void ASTUBaseCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 	check(HealthComponent);
+	HealthComponent->OnDeath.AddUObject(this, &ASTUBaseCharacter::OnDeath);
+	HealthComponent->OnHealthChanged.AddUObject(this,  &ASTUBaseCharacter::OnHealthChanged);
+	OnHealthChanged(HealthComponent->GetHealth());
+}
+
+
+void ASTUBaseCharacter::OnDeath()
+{
+	UE_LOG(LogCharacter, Log, TEXT("Player %s is dead"), *GetName());
+	PlayAnimMontage(DeathAnimMontage);
+	GetCharacterMovement()->DisableMovement();
+	SetLifeSpan(5);
+}
+
+void ASTUBaseCharacter::OnHealthChanged(float Health) const
+{
+	HealthTextComponent->SetText(FText::FromString(FString::Printf(TEXT("%.0f"), Health)));
 }
 
 // Called every frame
 void ASTUBaseCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	const auto Health = HealthComponent->GetHealth();
-	HealthTextComponent->SetText(FText::FromString(FString::Printf(TEXT("%.0f"), Health)));
-	//TakeDamage(0.1f, FDamageEvent{}, Controller, this);
 }
 
 // Called to bind functionality to input
