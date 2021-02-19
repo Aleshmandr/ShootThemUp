@@ -1,6 +1,5 @@
 // Shoot Them Up Game. All Rights Reserved.
 
-
 #include "STUBaseCharacter.h"
 #include "STUCharacterMovementComponent.h"
 #include "Camera/CameraComponent.h"
@@ -37,20 +36,6 @@ void ASTUBaseCharacter::BeginPlay()
 	HealthComponent->OnDeath.AddUObject(this, &ASTUBaseCharacter::OnDeath);
 	HealthComponent->OnHealthChanged.AddUObject(this,  &ASTUBaseCharacter::OnHealthChanged);
 	OnHealthChanged(HealthComponent->GetHealth());
-}
-
-
-void ASTUBaseCharacter::OnDeath()
-{
-	UE_LOG(LogCharacter, Log, TEXT("Player %s is dead"), *GetName());
-	PlayAnimMontage(DeathAnimMontage);
-	GetCharacterMovement()->DisableMovement();
-	SetLifeSpan(5);
-}
-
-void ASTUBaseCharacter::OnHealthChanged(float Health) const
-{
-	HealthTextComponent->SetText(FText::FromString(FString::Printf(TEXT("%.0f"), Health)));
 }
 
 // Called every frame
@@ -105,4 +90,18 @@ void ASTUBaseCharacter::StopShift()
 	{
 		MoveComponent->IsShifting = false;
 	}
+}
+
+void ASTUBaseCharacter::OnDeath()
+{
+	UE_LOG(LogCharacter, Log, TEXT("Player %s is dead"), *GetName());
+	PlayAnimMontage(DeathAnimMontage);
+	GetCharacterMovement()->DisableMovement();
+	SetLifeSpan(5);
+	Controller->ChangeState(NAME_Spectating);
+}
+
+void ASTUBaseCharacter::OnHealthChanged(float Health) const
+{
+	HealthTextComponent->SetText(FText::FromString(FString::Printf(TEXT("%.0f"), Health)));
 }

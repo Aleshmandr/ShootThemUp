@@ -8,21 +8,41 @@
 
 DEFINE_LOG_CATEGORY_STATIC(LogHealth, All, All)
 
+void USTUHealthComponent::TickComponent(float DeltaTime, ELevelTick TickType,
+                                        FActorComponentTickFunction* ThisTickFunction)
+{
+	if (!AutoHeal || IsDead())
+	{
+		return;
+	}
+	HealTimer -= DeltaTime;
+	if (Health < MaxHealth && HealTimer <= 0)
+	{
+		SetHealth(Health + AutoHealValue);
+		HealTimer = AutoHealUpdateDelta;
+	}
+}
+
 USTUHealthComponent::USTUHealthComponent()
 {
-	PrimaryComponentTick.bCanEverTick = false;
+	PrimaryComponentTick.bCanEverTick = true;
 }
 
 void USTUHealthComponent::BeginPlay()
 {
 	Super::BeginPlay();
-	Health = MaxHealth;
-	OnHealthChanged.Broadcast(Health);
+	SetHealth(MaxHealth);
 	AActor* Actor = GetOwner();
 	if (Actor)
 	{
 		Actor->OnTakeAnyDamage.AddDynamic(this, &USTUHealthComponent::HandleTakeAnyDamage);
 	}
+}
+
+void USTUHealthComponent::SetHealth(float NewHealth)
+{
+	Health = FMath::Clamp(NewHealth, 0.f, MaxHealth);
+	OnHealthChanged.Broadcast(Health);
 }
 
 void USTUHealthComponent::HandleTakeAnyDamage(AActor* DamagedActor, float Damage, const UDamageType* DamageType,
@@ -33,8 +53,8 @@ void USTUHealthComponent::HandleTakeAnyDamage(AActor* DamagedActor, float Damage
 		return;
 	}
 	UE_LOG(LogHealth, Log, TEXT("HandleTakeAnyDamage %f"), Damage);
-	Health = FMath::Clamp(Health - Damage, 0.f, MaxHealth);
-	OnHealthChanged.Broadcast(Health);
+	HealTimer = AutoHealDelay;
+	SetHealth(Health - Damage);
 	if (DamageType != nullptr)
 	{
 		if (DamageType->IsA<USTUFireDamageType>())
