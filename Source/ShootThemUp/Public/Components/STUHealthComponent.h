@@ -6,8 +6,8 @@
 #include "Components/ActorComponent.h"
 #include "STUHealthComponent.generated.h"
 
-DECLARE_MULTICAST_DELEGATE(FOnDeath);
-DECLARE_MULTICAST_DELEGATE_OneParam(FOnHealthChanged, float);
+DECLARE_MULTICAST_DELEGATE(FOnDeathSignature);
+DECLARE_MULTICAST_DELEGATE_OneParam(FOnHealthChangedSignature, float);
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class SHOOTTHEMUP_API USTUHealthComponent : public UActorComponent
@@ -15,17 +15,16 @@ class SHOOTTHEMUP_API USTUHealthComponent : public UActorComponent
 	GENERATED_BODY()
 
 public:
-	virtual void TickComponent(float DeltaTime, enum ELevelTick TickType,
-	                           FActorComponentTickFunction* ThisTickFunction) override;
-
 	USTUHealthComponent();
 
+	FOnDeathSignature OnDeath;
+	FOnHealthChangedSignature OnHealthChanged;
+
+	virtual void TickComponent(float DeltaTime, enum ELevelTick TickType,
+	                           FActorComponentTickFunction* ThisTickFunction) override;
 	float GetHealth() const { return Health; }
 	UFUNCTION(BlueprintCallable)
 	bool IsDead() const { return FMath::IsNearlyZero(Health); }
-
-	FOnDeath OnDeath;
-	FOnHealthChanged OnHealthChanged;
 
 protected:
 	UPROPERTY(EditDefaultsOnly, Category= "Health", BlueprintReadWrite, meta = (ClampMin = 0, ClampMax = 1000))
@@ -38,11 +37,17 @@ protected:
 	float AutoHealUpdateDelta = 0.5f;
 	UPROPERTY(EditDefaultsOnly, Category= "Heal", BlueprintReadWrite, meta = (EditCondition = "AutoHeal"))
 	float AutoHealValue = 1.f;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Damage")
+	FVector2D LandedDamageVelocity = FVector2D(800.0f, 1200.0f);
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Damage")
+	FVector2D LandedDamage = FVector2D(10.0f, 100.0f);
 
 	virtual void BeginPlay() override;
 
 
 private:
+	UPROPERTY()
+	ACharacter* OwnerCharacter;
 	float Health = 0.f;
 	float HealTimer = 0.f;
 
@@ -51,4 +56,6 @@ private:
 	UFUNCTION()
 	void HandleTakeAnyDamage(AActor* DamagedActor, float Damage, const UDamageType* DamageType,
 	                         AController* InstigatedBy, AActor* DamageCauser);
+	UFUNCTION()
+	void OnLanded(const FHitResult& Hit);
 };

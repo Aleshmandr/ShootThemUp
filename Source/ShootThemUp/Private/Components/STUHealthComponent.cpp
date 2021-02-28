@@ -5,6 +5,7 @@
 
 #include "STUFireDamageType.h"
 #include "STUIceDamageType.h"
+#include "GameFramework/Character.h"
 
 DEFINE_LOG_CATEGORY_STATIC(LogHealth, All, All)
 
@@ -32,11 +33,10 @@ void USTUHealthComponent::BeginPlay()
 {
 	Super::BeginPlay();
 	SetHealth(MaxHealth);
-	AActor* Actor = GetOwner();
-	if (Actor)
-	{
-		Actor->OnTakeAnyDamage.AddDynamic(this, &USTUHealthComponent::HandleTakeAnyDamage);
-	}
+	OwnerCharacter = Cast<ACharacter>(GetOwner());
+	check(OwnerCharacter);
+	OwnerCharacter->OnTakeAnyDamage.AddDynamic(this, &USTUHealthComponent::HandleTakeAnyDamage);
+	OwnerCharacter->LandedDelegate.AddDynamic(this, &USTUHealthComponent::OnLanded);
 }
 
 void USTUHealthComponent::SetHealth(float NewHealth)
@@ -69,5 +69,19 @@ void USTUHealthComponent::HandleTakeAnyDamage(AActor* DamagedActor, float Damage
 	if (IsDead())
 	{
 		OnDeath.Broadcast();
+	}
+}
+
+void USTUHealthComponent::OnLanded(const FHitResult& Hit)
+{
+	const float LandingVelocity = -OwnerCharacter->GetVelocity().Z;
+	UE_LOG(LogHealth, Log, TEXT("Landing velocity = %f"), LandingVelocity);
+	if (LandingVelocity >= LandedDamageVelocity.X)
+	{
+		const float NormDamageVelocity = FMath::Clamp(LandingVelocity, LandedDamageVelocity.X, LandedDamageVelocity.Y) /
+			LandedDamageVelocity.Y;
+		const float Damage = FMath::GetMappedRangeValueClamped(LandedDamageVelocity, LandedDamage, LandingVelocity);
+		UE_LOG(LogHealth, Log, TEXT("Landing damage = %f"), Damage);
+		OwnerCharacter->TakeDamage(Damage, FDamageEvent{}, nullptr, nullptr);
 	}
 }

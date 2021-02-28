@@ -16,13 +16,11 @@ ASTUBaseCharacter::ASTUBaseCharacter(const FObjectInitializer& ObjInitializer): 
 {
 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-
 	SpringArmComponent = CreateDefaultSubobject<USpringArmComponent>("SpringArm");
 	SpringArmComponent->SetupAttachment(GetRootComponent());
 	SpringArmComponent->bUsePawnControlRotation = true;
 	CameraComponent = CreateDefaultSubobject<UCameraComponent>("Camera");
 	CameraComponent->SetupAttachment(SpringArmComponent);
-
 	HealthComponent = CreateDefaultSubobject<USTUHealthComponent>("Health");
 	HealthTextComponent = CreateDefaultSubobject<UTextRenderComponent>("HealthText");
 	HealthTextComponent->SetupAttachment(GetRootComponent());
@@ -34,7 +32,7 @@ void ASTUBaseCharacter::BeginPlay()
 	Super::BeginPlay();
 	check(HealthComponent);
 	HealthComponent->OnDeath.AddUObject(this, &ASTUBaseCharacter::OnDeath);
-	HealthComponent->OnHealthChanged.AddUObject(this,  &ASTUBaseCharacter::OnHealthChanged);
+	HealthComponent->OnHealthChanged.AddUObject(this, &ASTUBaseCharacter::OnHealthChanged);
 	OnHealthChanged(HealthComponent->GetHealth());
 }
 
@@ -48,6 +46,7 @@ void ASTUBaseCharacter::Tick(float DeltaTime)
 void ASTUBaseCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
+	check(PlayerInputComponent);
 	PlayerInputComponent->BindAxis("MoveForward", this, &ASTUBaseCharacter::MoveForward);
 	PlayerInputComponent->BindAxis("MoveRight", this, &ASTUBaseCharacter::MoveRight);
 	PlayerInputComponent->BindAxis("LookUp", this, &ASTUBaseCharacter::AddControllerPitchInput);

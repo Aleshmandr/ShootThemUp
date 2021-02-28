@@ -17,12 +17,12 @@ class SHOOTTHEMUP_API ASTUBaseCharacter : public ACharacter
 	GENERATED_BODY()
 
 public:
-	
+
 	// Sets default values for this character's properties
 	ASTUBaseCharacter(const FObjectInitializer& ObjInitializer);
 
 protected:
-	
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category="Components")
 	UCameraComponent* CameraComponent;
 
@@ -34,11 +34,12 @@ protected:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category="Components")
 	UTextRenderComponent* HealthTextComponent;
-	
+
 	UPROPERTY(EditDefaultsOnly, Category="Animation")
 	UAnimMontage* DeathAnimMontage;
-	
+
 	void OnDeath();
+
 	void OnHealthChanged(float) const;
 
 	// Called when the game starts or when spawned
