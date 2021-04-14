@@ -3,6 +3,8 @@
 #pragma once
 
 #include "CoreMinimal.h"
+
+#include "STUBaseWeapon.h"
 #include "GameFramework/Character.h"
 #include "STUBaseCharacter.generated.h"
 
@@ -10,6 +12,7 @@ class UCameraComponent;
 class USpringArmComponent;
 class USTUHealthComponent;
 class UTextRenderComponent;
+class ASTUBaseWeapon;
 
 UCLASS()
 class SHOOTTHEMUP_API ASTUBaseCharacter : public ACharacter
@@ -38,6 +41,9 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category="Animation")
 	UAnimMontage* DeathAnimMontage;
 
+	UPROPERTY(EditDefaultsOnly, Category="Weapon")
+	TSubclassOf<ASTUBaseWeapon> WeaponClass;
+
 	void OnDeath();
 
 	void OnHealthChanged(float) const;
@@ -58,4 +64,5 @@ private:
 	void MoveRight(float Axis);
 	void StartShift();
 	void StopShift();
+	void SpawnWeapon();
 };

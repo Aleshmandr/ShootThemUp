@@ -1,5 +1,3 @@
-
-
 using UnrealBuildTool;
 
 public class ShootThemUp : ModuleRules
@@ -7,16 +5,22 @@ public class ShootThemUp : ModuleRules
 	public ShootThemUp(ReadOnlyTargetRules Target) : base(Target)
 	{
 		PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
-	
-		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore" });
 
-		PrivateDependencyModuleNames.AddRange(new string[] {  });
-		
-		PrivateIncludePaths.AddRange(new[]{"ShootThemUp/Public/Player", "ShootThemUp/Public/Components", "ShootThemUp/Public/Dev"});
+		PublicDependencyModuleNames.AddRange(new string[] {"Core", "CoreUObject", "Engine", "InputCore"});
+
+		PrivateDependencyModuleNames.AddRange(new string[] { });
+
+		PrivateIncludePaths.AddRange(new[]
+		{
+			"ShootThemUp/Public/Player",
+			"ShootThemUp/Public/Components",
+			"ShootThemUp/Public/Weapon",
+			"ShootThemUp/Public/Dev"
+		});
 
 		// Uncomment if you are using Slate UI
 		// PrivateDependencyModuleNames.AddRange(new string[] { "Slate", "SlateCore" });
-		
+
 		// Uncomment if you are using online features
 		// PrivateDependencyModuleNames.Add("OnlineSubsystem");
 

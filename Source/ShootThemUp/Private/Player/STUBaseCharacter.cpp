@@ -6,6 +6,7 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "STUHealthComponent.h"
+#include "Weapon/STUBaseWeapon.h"
 #include "Components/TextRenderComponent.h"
 
 DEFINE_LOG_CATEGORY_STATIC(LogCharacter, All, All)
@@ -34,6 +35,7 @@ void ASTUBaseCharacter::BeginPlay()
 	HealthComponent->OnDeath.AddUObject(this, &ASTUBaseCharacter::OnDeath);
 	HealthComponent->OnHealthChanged.AddUObject(this, &ASTUBaseCharacter::OnHealthChanged);
 	OnHealthChanged(HealthComponent->GetHealth());
+	SpawnWeapon();
 }
 
 // Called every frame
@@ -88,6 +90,21 @@ void ASTUBaseCharacter::StopShift()
 	if (MoveComponent)
 	{
 		MoveComponent->IsShifting = false;
+	}
+}
+
+void ASTUBaseCharacter::SpawnWeapon()
+{
+	UWorld* World = GetWorld();
+	if (World == nullptr)
+	{
+		return;
+	}
+	ASTUBaseWeapon* Weapon = World->SpawnActor<ASTUBaseWeapon>(WeaponClass);
+	if(Weapon)
+	{
+		const FAttachmentTransformRules AttachmentRules(EAttachmentRule::SnapToTarget, false);
+		Weapon->AttachToComponent(GetMesh(), AttachmentRules, "WeaponSocket");
 	}
 }
 
