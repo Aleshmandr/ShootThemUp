@@ -20,11 +20,13 @@ ASTUBaseCharacter::ASTUBaseCharacter(const FObjectInitializer& ObjInitializer): 
 	SpringArmComponent = CreateDefaultSubobject<USpringArmComponent>("SpringArm");
 	SpringArmComponent->SetupAttachment(GetRootComponent());
 	SpringArmComponent->bUsePawnControlRotation = true;
+	SpringArmComponent->SocketOffset = FVector(0.0f, 100.0f, 80.0f);
 	CameraComponent = CreateDefaultSubobject<UCameraComponent>("Camera");
 	CameraComponent->SetupAttachment(SpringArmComponent);
 	HealthComponent = CreateDefaultSubobject<USTUHealthComponent>("Health");
 	HealthTextComponent = CreateDefaultSubobject<UTextRenderComponent>("HealthText");
 	HealthTextComponent->SetupAttachment(GetRootComponent());
+	HealthTextComponent->SetOwnerNoSee(true);
 }
 
 // Called when the game starts or when spawned
