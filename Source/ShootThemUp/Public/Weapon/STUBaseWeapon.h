@@ -14,10 +14,15 @@ class SHOOTTHEMUP_API ASTUBaseWeapon : public AActor
 public:
 	ASTUBaseWeapon();
 	virtual void Fire();
+	void MakeShot() const;
 
 protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category="Components")
 	USkeletalMeshComponent* WeaponMesh;
-	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FName MuzzleSocketName = "MuzzleSocket";
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float TraceMaxDistance = 1000.0f;
+
 	virtual void BeginPlay() override;
 };
