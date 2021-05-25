@@ -25,4 +25,11 @@ protected:
 	float TraceMaxDistance = 1000.0f;
 
 	virtual void BeginPlay() override;
+
+	private:
+	APlayerController* GetPlayerController() const;
+	bool GetPlayerViewPoint(FVector& ViewLocation, FRotator& ViewRotation) const;
+	bool GetTraceData(FVector& TraceStart, FVector& TraceEnd) const;
+	bool MakeHit(FHitResult& HitResult, const FVector& TraceStart, const FVector& TraceEnd) const;
+	FVector GetMuzzleWorldLocation() const;
 };
