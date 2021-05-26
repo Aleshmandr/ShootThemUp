@@ -3,6 +3,7 @@
 
 #include "Weapon/STUBaseWeapon.h"
 #include "DrawDebugHelpers.h"
+#include "STUBaseCharacter.h"
 #include "GameFramework/Character.h"
 
 DEFINE_LOG_CATEGORY_STATIC(LogWeapon, All, All)
@@ -25,7 +26,7 @@ void ASTUBaseWeapon::Fire()
 	MakeShot();
 }
 
-void ASTUBaseWeapon::MakeShot() const
+void ASTUBaseWeapon::MakeShot()
 {
 	if (!GetWorld())
 	{
@@ -46,6 +47,7 @@ void ASTUBaseWeapon::MakeShot() const
 	{
 		DrawDebugLine(GetWorld(), MuzzleLocation, HitResult.ImpactPoint, FColor::Red, false, 1.f, 0.f, 2.f);
 		DrawDebugSphere(GetWorld(), HitResult.ImpactPoint, 10.f, 8, FColor::Red, false, 3.f, 0.f);
+		MakeDamage(HitResult);
 	}
 	else
 	{
@@ -99,5 +101,15 @@ bool ASTUBaseWeapon::MakeHit(FHitResult& HitResult, const FVector& TraceStart, c
 FVector ASTUBaseWeapon::GetMuzzleWorldLocation() const
 {
 	return WeaponMesh->GetSocketLocation(MuzzleSocketName);
+}
+
+void ASTUBaseWeapon::MakeDamage(const FHitResult& HitResult)
+{
+	const auto HitActor = HitResult.GetActor();
+	if(!HitActor)
+	{
+		return;
+	}
+	HitActor->TakeDamage(Damage, FDamageEvent() , GetPlayerController(), this);
 }
 

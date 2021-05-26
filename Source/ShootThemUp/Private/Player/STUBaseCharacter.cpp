@@ -6,6 +6,7 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "STUHealthComponent.h"
+#include "Components/CapsuleComponent.h"
 #include "Components/TextRenderComponent.h"
 #include "Components/STUWeaponComponent.h"
 
@@ -104,6 +105,7 @@ void ASTUBaseCharacter::OnDeath()
 	GetCharacterMovement()->DisableMovement();
 	SetLifeSpan(5);
 	Controller->ChangeState(NAME_Spectating);
+	GetCapsuleComponent()->SetCollisionResponseToAllChannels(ECR_Ignore);
 }
 
 void ASTUBaseCharacter::OnHealthChanged(float Health) const
