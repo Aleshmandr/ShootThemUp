@@ -60,7 +60,8 @@ void ASTUBaseCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 	PlayerInputComponent->BindAction("Jump", EInputEvent::IE_Pressed, this, &ASTUBaseCharacter::Jump);
 	PlayerInputComponent->BindAction("Shift", EInputEvent::IE_Pressed, this, &ASTUBaseCharacter::StartShift);
 	PlayerInputComponent->BindAction("Shift", EInputEvent::IE_Released, this, &ASTUBaseCharacter::StopShift);
-	PlayerInputComponent->BindAction("Fire", EInputEvent::IE_Pressed, WeaponComponent, &USTUWeaponComponent::Fire);
+	PlayerInputComponent->BindAction("Fire", EInputEvent::IE_Pressed, WeaponComponent, &USTUWeaponComponent::StartFire);
+	PlayerInputComponent->BindAction("Fire", EInputEvent::IE_Released, WeaponComponent, &USTUWeaponComponent::StopFire);
 }
 
 void ASTUBaseCharacter::MoveForward(float Axis)

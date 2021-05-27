@@ -13,7 +13,8 @@ class SHOOTTHEMUP_API ASTUBaseWeapon : public AActor
 
 public:
 	ASTUBaseWeapon();
-	virtual void Fire();
+	virtual void StartFire();
+	virtual void StopFire();
 	void MakeShot();
 
 protected:
@@ -25,9 +26,12 @@ protected:
 	float TraceMaxDistance = 1000.0f;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float Damage = 10.0f;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float TimePerShot = 0.1f;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float ShotDirHalfAngle;
 
 	virtual void BeginPlay() override;
-	
 
 	private:
 	APlayerController* GetPlayerController() const;
@@ -36,4 +40,5 @@ protected:
 	bool MakeHit(FHitResult& HitResult, const FVector& TraceStart, const FVector& TraceEnd) const;
 	FVector GetMuzzleWorldLocation() const;
 	void MakeDamage(const FHitResult& HitResult);
+	FTimerHandle ShotTimerHandle;
 };

@@ -13,10 +13,16 @@ USTUWeaponComponent::USTUWeaponComponent()
 	PrimaryComponentTick.bCanEverTick = false;
 }
 
-void USTUWeaponComponent::Fire()
+void USTUWeaponComponent::StartFire()
 {
 	if (CurrentWeapon == nullptr) return;
-	CurrentWeapon->Fire();
+	CurrentWeapon->StartFire();
+}
+
+void USTUWeaponComponent::StopFire()
+{
+	if (CurrentWeapon == nullptr) return;
+	CurrentWeapon->StopFire();
 }
 
 // Called when the game starts or when spawned
