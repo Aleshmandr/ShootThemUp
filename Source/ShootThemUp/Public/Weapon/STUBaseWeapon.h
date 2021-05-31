@@ -23,7 +23,7 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FName MuzzleSocketName = "MuzzleSocket";
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	float TraceMaxDistance = 1000.0f;
+	float TraceMaxDistance = 10000.0f;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float Damage = 10.0f;
 
