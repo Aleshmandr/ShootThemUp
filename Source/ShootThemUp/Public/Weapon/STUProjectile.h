@@ -3,10 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-
 #include "GameFramework/Actor.h"
-
-
 #include "STUProjectile.generated.h"
 
 class UProjectileMovementComponent;
@@ -28,8 +25,23 @@ protected:
 	UPROPERTY(VisibleDefaultsOnly, Category="Weapon")
 	UProjectileMovementComponent* MovementComponent;
 
+	UPROPERTY(VisibleDefaultsOnly, Category="Weapon")
+	float DamageRadius = 200.0f;
+
+	UPROPERTY(VisibleDefaultsOnly, Category="Weapon")
+	float Damage = 50.0f;
+
+	UPROPERTY(VisibleDefaultsOnly, Category="Weapon")
+	float LifeTime = 5.0f;
+
+	UPROPERTY(VisibleDefaultsOnly, Category="Weapon")
+	bool DoFullDamage;
+
 	virtual void BeginPlay() override;
 
 private:
 	FVector ShotDirection;
+	UFUNCTION()
+	void OnProjectileHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
+	AController* GetController() const;
 };

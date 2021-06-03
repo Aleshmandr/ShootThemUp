@@ -80,14 +80,3 @@ FVector ASTUBaseWeapon::GetMuzzleWorldLocation() const
 {
 	return WeaponMesh->GetSocketLocation(MuzzleSocketName);
 }
-
-void ASTUBaseWeapon::MakeDamage(const FHitResult& HitResult)
-{
-	const auto HitActor = HitResult.GetActor();
-	if(!HitActor)
-	{
-		return;
-	}
-	HitActor->TakeDamage(Damage, FDamageEvent() , GetPlayerController(), this);
-}
-
