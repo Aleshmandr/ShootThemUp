@@ -34,7 +34,6 @@ void ASTUProjectile::OnProjectileHit(UPrimitiveComponent* HitComponent, AActor* 
                                      UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
 {
 	if (!GetWorld()) { return; }
-
 	MovementComponent->StopMovementImmediately();
 	UGameplayStatics::ApplyRadialDamage(GetWorld(),
 	                                    Damage, //
