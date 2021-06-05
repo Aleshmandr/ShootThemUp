@@ -19,6 +19,17 @@ void USTUWeaponComponent::BeginPlay()
 	EquipWeapon(CurrentWeaponIndex);
 }
 
+void USTUWeaponComponent::EndPlay(const EEndPlayReason::Type EndPlayReason)
+{
+	CurrentWeapon = nullptr;
+	for (auto Weapon : Weapons)
+	{
+		Weapon->DetachFromActor(FDetachmentTransformRules::KeepWorldTransform);
+		Weapon->Destroy();
+	}
+	Weapons.Empty();
+	Super::EndPlay(EndPlayReason);
+}
 
 void USTUWeaponComponent::StartFire()
 {
@@ -54,6 +65,7 @@ void USTUWeaponComponent::EquipWeapon(int WeaponIndex)
 	if (!Character) { return; }
 	if(CurrentWeapon)
 	{
+		CurrentWeapon->StopFire();
 		AttachWeaponToSocket(CurrentWeapon, Character->GetMesh(), WeaponArmorySocketName);
 	}
 	CurrentWeapon = Weapons[WeaponIndex];

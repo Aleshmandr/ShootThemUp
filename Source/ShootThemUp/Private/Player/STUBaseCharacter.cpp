@@ -109,6 +109,7 @@ void ASTUBaseCharacter::OnDeath()
 	SetLifeSpan(5);
 	Controller->ChangeState(NAME_Spectating);
 	GetCapsuleComponent()->SetCollisionResponseToAllChannels(ECR_Ignore);
+	WeaponComponent->StopFire();
 }
 
 void ASTUBaseCharacter::OnHealthChanged(float Health) const

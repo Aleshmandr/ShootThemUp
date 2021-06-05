@@ -34,10 +34,10 @@ void ASTUProjectile::BeginPlay()
 	SetLifeSpan(LifeTime);
 }
 
-void ASTUProjectile::BeginDestroy()
+void ASTUProjectile::EndPlay(const EEndPlayReason::Type EndPlayReason)
 {
 	IgnoreOwner(false);
-	Super::BeginDestroy();
+	Super::EndPlay(EndPlayReason);
 }
 
 void ASTUProjectile::OnProjectileHit(UPrimitiveComponent* HitComponent, AActor* OtherActor,

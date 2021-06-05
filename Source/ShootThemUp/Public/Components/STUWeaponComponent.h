@@ -27,7 +27,7 @@ protected:
 	FName WeaponArmorySocketName = "ArmorySocket";
 
 	virtual void BeginPlay() override;
-
+	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 private:
 	UPROPERTY()
 	ASTUBaseWeapon* CurrentWeapon = nullptr;
