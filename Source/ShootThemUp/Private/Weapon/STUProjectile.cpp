@@ -4,9 +4,13 @@
 #include "Weapon/STUProjectile.h"
 
 #include "DrawDebugHelpers.h"
+#include "Components/CapsuleComponent.h"
 #include "Components/SphereComponent.h"
+#include "GameFramework/Character.h"
 #include "GameFramework/ProjectileMovementComponent.h"
 #include "Kismet/GameplayStatics.h"
+
+DEFINE_LOG_CATEGORY_STATIC(LogProjectile, All, All)
 
 ASTUProjectile::ASTUProjectile()
 {
@@ -25,25 +29,38 @@ void ASTUProjectile::BeginPlay()
 	check(MovementComponent);
 	check(CollisionComponent);
 	MovementComponent->Velocity = ShotDirection * MovementComponent->InitialSpeed;
-	CollisionComponent->IgnoreActorWhenMoving(GetOwner(), true);
+	IgnoreOwner(true);
 	CollisionComponent->OnComponentHit.AddDynamic(this, &ASTUProjectile::OnProjectileHit);
 	SetLifeSpan(LifeTime);
+}
+
+void ASTUProjectile::BeginDestroy()
+{
+	IgnoreOwner(false);
+	Super::BeginDestroy();
 }
 
 void ASTUProjectile::OnProjectileHit(UPrimitiveComponent* HitComponent, AActor* OtherActor,
                                      UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
 {
+	const auto OtherName = OtherActor == nullptr ? "None" : OtherActor->GetName();
+	Explode();
+}
+
+void ASTUProjectile::Explode()
+{
 	if (!GetWorld()) { return; }
 	MovementComponent->StopMovementImmediately();
 	UGameplayStatics::ApplyRadialDamage(GetWorld(),
-	                                    Damage, //
-	                                    GetActorLocation(), //
-	                                    DamageRadius, //
-	                                    UDamageType::StaticClass(), //
-	                                    {GetOwner()}, //
-	                                    this, //
-	                                    GetController(), //
+	                                    Damage,
+	                                    GetActorLocation(),
+	                                    DamageRadius,
+	                                    UDamageType::StaticClass(),
+	                                    {GetOwner()},
+	                                    this,
+	                                    GetController(),
 	                                    DoFullDamage);
+
 	DrawDebugSphere(GetWorld(), GetActorLocation(), DamageRadius, 16, FColor::Red, false, 5.0f);
 	Destroy();
 }
@@ -51,5 +68,11 @@ void ASTUProjectile::OnProjectileHit(UPrimitiveComponent* HitComponent, AActor* 
 AController* ASTUProjectile::GetController() const
 {
 	const auto Pawn = Cast<APawn>(GetOwner());
-	return Pawn ?  Pawn->GetController() : nullptr;
+	return Pawn ? Pawn->GetController() : nullptr;
+}
+
+void ASTUProjectile::IgnoreOwner(bool bShouldIgnore) const
+{
+	CollisionComponent->IgnoreActorWhenMoving(GetOwner(), bShouldIgnore);
+	//UE_LOG(LogProjectile, Log, TEXT("Count %d"), Character->GetCapsuleComponent()->GetMoveIgnoreActors().Num());
 }

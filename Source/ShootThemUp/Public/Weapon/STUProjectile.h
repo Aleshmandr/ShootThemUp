@@ -39,9 +39,13 @@ protected:
 
 	virtual void BeginPlay() override;
 
+	virtual void BeginDestroy() override;
+
 private:
 	FVector ShotDirection;
 	UFUNCTION()
 	void OnProjectileHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
+	void Explode();
 	AController* GetController() const;
+	void IgnoreOwner(bool bShouldIgnore) const;
 };
