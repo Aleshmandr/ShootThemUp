@@ -2,10 +2,14 @@
 
 
 #include "Components/STUWeaponComponent.h"
+
+#include "STUEquipFinishedAnimNotify.h"
 #include "GameFramework/Character.h"
 #include "Weapon/STUBaseWeapon.h"
 
 class ASTUBaseWeapon;
+
+DEFINE_LOG_CATEGORY_STATIC(LogWeaponComponent, All, All)
 
 USTUWeaponComponent::USTUWeaponComponent()
 {
@@ -17,6 +21,7 @@ void USTUWeaponComponent::BeginPlay()
 	Super::BeginPlay();
 	SpawnWeapons();
 	EquipWeapon(CurrentWeaponIndex);
+	InitAnimations();
 }
 
 void USTUWeaponComponent::EndPlay(const EEndPlayReason::Type EndPlayReason)
@@ -33,8 +38,10 @@ void USTUWeaponComponent::EndPlay(const EEndPlayReason::Type EndPlayReason)
 
 void USTUWeaponComponent::StartFire()
 {
-	if (CurrentWeapon == nullptr) return;
-	CurrentWeapon->StartFire();
+	if(CanFire())
+	{
+		CurrentWeapon->StartFire();
+	}
 }
 
 void USTUWeaponComponent::StopFire()
@@ -63,13 +70,54 @@ void USTUWeaponComponent::EquipWeapon(int WeaponIndex)
 {
 	ACharacter* Character = Cast<ACharacter>(GetOwner());
 	if (!Character) { return; }
-	if(CurrentWeapon)
+	if (CurrentWeapon)
 	{
 		CurrentWeapon->StopFire();
 		AttachWeaponToSocket(CurrentWeapon, Character->GetMesh(), WeaponArmorySocketName);
 	}
 	CurrentWeapon = Weapons[WeaponIndex];
 	AttachWeaponToSocket(CurrentWeapon, Character->GetMesh(), WeaponEquipSocketName);
+	PlayAnimMontage(EquipAnimMontage);
+	EquipAnimInProgress = true;
+}
+
+void USTUWeaponComponent::PlayAnimMontage(UAnimMontage* Animation) const
+{
+	ACharacter* Character = Cast<ACharacter>(GetOwner());
+	if (!Character) { return; }
+	Character->PlayAnimMontage(Animation);
+}
+
+void USTUWeaponComponent::InitAnimations()
+{
+	if (!EquipAnimMontage) { return; }
+	const auto NotifyEvents = EquipAnimMontage->Notifies;
+	for (auto NotifyEvent : NotifyEvents)
+	{
+		auto EquipFinishNotify = Cast<USTUEquipFinishedAnimNotify>(NotifyEvent.Notify);
+		if (EquipFinishNotify)
+		{
+			EquipFinishNotify->OnNotified.AddUObject(this, &USTUWeaponComponent::OnEquipFinished);
+			break;
+		}
+	}
+}
+
+void USTUWeaponComponent::OnEquipFinished(USkeletalMeshComponent* MeshComp)
+{
+	ACharacter* Character = Cast<ACharacter>(GetOwner());
+	if (!Character || Character->GetMesh() != MeshComp) { return; }
+	EquipAnimInProgress = false;
+}
+
+bool USTUWeaponComponent::CanFire() const
+{
+	return CurrentWeapon != nullptr && !EquipAnimInProgress;
+}
+
+bool USTUWeaponComponent::CanEquip() const
+{
+	return !EquipAnimInProgress;
 }
 
 void USTUWeaponComponent::AttachWeaponToSocket(ASTUBaseWeapon* Weapon, USceneComponent* Parent, const FName& SocketName)
@@ -81,6 +129,9 @@ void USTUWeaponComponent::AttachWeaponToSocket(ASTUBaseWeapon* Weapon, USceneCom
 
 void USTUWeaponComponent::NextWeapon()
 {
-	CurrentWeaponIndex = (CurrentWeaponIndex + 1) % Weapons.Num();
-	EquipWeapon(CurrentWeaponIndex);
+	if(CanEquip())
+	{
+		CurrentWeaponIndex = (CurrentWeaponIndex + 1) % Weapons.Num();
+		EquipWeapon(CurrentWeaponIndex);
+	}
 }

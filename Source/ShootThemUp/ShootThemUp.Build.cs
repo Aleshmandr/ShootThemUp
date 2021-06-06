@@ -16,6 +16,7 @@ public class ShootThemUp : ModuleRules
 			"ShootThemUp/Public/Components",
 			"ShootThemUp/Public/Weapon",
 			"ShootThemUp/Public/UI",
+			"ShootThemUp/Public/Animations",
 			"ShootThemUp/Public/Dev"
 		});
 

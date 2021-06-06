@@ -3,7 +3,6 @@
 #pragma once
 
 #include "CoreMinimal.h"
-
 #include "STUBaseWeapon.h"
 #include "STUWeaponComponent.generated.h"
 
@@ -25,6 +24,8 @@ protected:
 	FName WeaponEquipSocketName = "WeaponSocket";
 	UPROPERTY(EditDefaultsOnly, Category="Weapon")
 	FName WeaponArmorySocketName = "ArmorySocket";
+	UPROPERTY(EditDefaultsOnly, Category="Animation")
+	UAnimMontage* EquipAnimMontage;
 
 	virtual void BeginPlay() override;
 	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
@@ -36,8 +37,14 @@ private:
 	TArray<ASTUBaseWeapon*> Weapons;
 
 	int CurrentWeaponIndex = 0;
+	bool EquipAnimInProgress = false;
 
 	static void AttachWeaponToSocket(ASTUBaseWeapon* Weapon, USceneComponent* Parent, const FName& SocketName);
 	void SpawnWeapons();
 	void EquipWeapon(int WeaponIndex);
+	void PlayAnimMontage(UAnimMontage* Animation) const;
+	void InitAnimations();
+	void OnEquipFinished(USkeletalMeshComponent* MeshComp);
+	bool CanFire() const;
+	bool CanEquip() const;
 };
