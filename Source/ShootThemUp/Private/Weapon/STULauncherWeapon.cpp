@@ -11,9 +11,9 @@ void ASTULauncherWeapon::StartFire()
 
 void ASTULauncherWeapon::MakeShot()
 {
-
-	if (!GetWorld())
+	if (!GetWorld() || IsAmmoEmpty())
 	{
+		StopFire();
 		return;
 	}
 
@@ -21,20 +21,22 @@ void ASTULauncherWeapon::MakeShot()
 	FVector TraceEnd;
 	if (!GetTraceData(TraceStart, TraceEnd))
 	{
+		StopFire();
 		return;
 	}
 
 	FHitResult HitResult;
 	MakeHit(HitResult, TraceStart, TraceEnd);
-	FVector EndPoint = HitResult.bBlockingHit ?  HitResult.ImpactPoint : TraceEnd;
+	FVector EndPoint = HitResult.bBlockingHit ? HitResult.ImpactPoint : TraceEnd;
 	const FVector Direction = (EndPoint - GetMuzzleWorldLocation()).GetSafeNormal();
-	
+
 	const FTransform SpawnTransform(FRotator::ZeroRotator, GetMuzzleWorldLocation());
 	ASTUProjectile* Projectile = GetWorld()->SpawnActorDeferred<ASTUProjectile>(ProjectileClass, SpawnTransform);
-	if(Projectile)
+	if (Projectile)
 	{
 		Projectile->SetDirection(Direction);
 		Projectile->SetOwner(GetOwner());
 		Projectile->FinishSpawning(SpawnTransform);
-	}	
+	}
+	DecreaseAmmo();
 }

@@ -20,8 +20,9 @@ void ASTURifleWeapon::StopFire()
 
 void ASTURifleWeapon::MakeShot()
 {
-	if (!GetWorld())
+	if (!GetWorld() || IsAmmoEmpty())
 	{
+		StopFire();
 		return;
 	}
 
@@ -29,6 +30,7 @@ void ASTURifleWeapon::MakeShot()
 	FVector TraceEnd;
 	if (!GetTraceData(TraceStart, TraceEnd))
 	{
+		StopFire();
 		return;
 	}
 
@@ -45,6 +47,7 @@ void ASTURifleWeapon::MakeShot()
 	{
 		DrawDebugLine(GetWorld(), MuzzleLocation, TraceEnd, FColor::Red, false, 1.f, 0.f, 2.f);
 	}
+	DecreaseAmmo();
 }
 
 bool ASTURifleWeapon::GetTraceData(FVector& TraceStart, FVector& TraceEnd) const
@@ -64,9 +67,9 @@ bool ASTURifleWeapon::GetTraceData(FVector& TraceStart, FVector& TraceEnd) const
 void ASTURifleWeapon::MakeDamage(const FHitResult& HitResult)
 {
 	const auto HitActor = HitResult.GetActor();
-	if(!HitActor)
+	if (!HitActor)
 	{
 		return;
 	}
-	HitActor->TakeDamage(Damage, FDamageEvent() , GetPlayerController(), this);
+	HitActor->TakeDamage(Damage, FDamageEvent(), GetPlayerController(), this);
 }
