@@ -3,22 +3,10 @@
 #pragma once
 
 #include "CoreMinimal.h"
+
+#include "STUCoreTypes.h"
 #include "GameFramework/Actor.h"
 #include "STUBaseWeapon.generated.h"
-
-DECLARE_MULTICAST_DELEGATE(FOnClipEmptySignature);
-
-USTRUCT(BlueprintType)
-struct FAmmoData
-{
-	GENERATED_BODY()
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Weapon")
-	int Bullets;
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Weapon", meta = (EditConditions = "!IsInfinite"))
-	int Clips;
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Weapon")
-	bool IsInfinite;
-};
 
 UCLASS()
 class SHOOTTHEMUP_API ASTUBaseWeapon : public AActor

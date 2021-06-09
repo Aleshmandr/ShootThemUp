@@ -6,16 +6,6 @@
 #include "STUBaseWeapon.h"
 #include "STUWeaponComponent.generated.h"
 
-USTRUCT(BlueprintType)
-struct FWeaponData
-{
-	GENERATED_BODY()
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Weapon")
-	TSubclassOf<ASTUBaseWeapon> WeaponClass;
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Weapon")
-	UAnimMontage* ReloadAnimMontage;
-};
-
 UCLASS()
 class SHOOTTHEMUP_API USTUWeaponComponent : public UActorComponent
 {
@@ -66,21 +56,4 @@ private:
 	bool CanReload() const;
 	void OnClipEmpty();
 	void ChangeClip();
-
-	template<typename T>
-	T* FindNotifyByClass(UAnimSequenceBase* Animation)
-	{
-		if (!EquipAnimMontage) { return nullptr; }
-	
-		const auto NotifyEvents = Animation->Notifies;
-		for (auto NotifyEvent : NotifyEvents)
-		{
-			auto Notify = Cast<T>(NotifyEvent.Notify);
-			if (Notify)
-			{
-				return Notify;
-			}
-		}
-		return nullptr;
-	}
 };

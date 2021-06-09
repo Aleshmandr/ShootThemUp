@@ -6,9 +6,6 @@
 #include "STUAnimNotify.h"
 #include "STUEquipFinishedAnimNotify.generated.h"
 
-/**
- * 
- */
 UCLASS()
 class SHOOTTHEMUP_API USTUEquipFinishedAnimNotify : public USTUAnimNotify
 {

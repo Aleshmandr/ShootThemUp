@@ -3,6 +3,7 @@
 
 #include "Components/STUWeaponComponent.h"
 
+#include "AnimUtils.h"
 #include "STUEquipFinishedAnimNotify.h"
 #include "STUReloadFinishedAnimNotify.h"
 #include "GameFramework/Character.h"
@@ -20,6 +21,7 @@ USTUWeaponComponent::USTUWeaponComponent()
 void USTUWeaponComponent::BeginPlay()
 {
 	Super::BeginPlay();
+	
 	SpawnWeapons();
 	EquipWeapon(CurrentWeaponIndex);
 	InitAnimations();
@@ -101,19 +103,27 @@ void USTUWeaponComponent::PlayAnimMontage(UAnimMontage* Animation) const
 
 void USTUWeaponComponent::InitAnimations()
 {
-	auto EquipFinishNotify = FindNotifyByClass<USTUEquipFinishedAnimNotify>(EquipAnimMontage);
+	auto EquipFinishNotify = AnimUtils::FindNotifyByClass<USTUEquipFinishedAnimNotify>(EquipAnimMontage);
 	if (EquipFinishNotify)
 	{
 		EquipFinishNotify->OnNotified.AddUObject(this, &USTUWeaponComponent::OnEquipFinished);
+	}else
+	{
+		UE_LOG(LogWeaponComponent, Error, TEXT("No equip anim notify!"));
+		checkNoEntry();
 	}
 
 
 	for (auto WeaponData : WeaponsData)
 	{
-		auto ReloadFinishNotify = FindNotifyByClass<USTUReloadFinishedAnimNotify>(WeaponData.ReloadAnimMontage);
+		auto ReloadFinishNotify = AnimUtils::FindNotifyByClass<USTUReloadFinishedAnimNotify>(WeaponData.ReloadAnimMontage);
 		if (ReloadFinishNotify)
 		{
 			ReloadFinishNotify->OnNotified.AddUObject(this, &USTUWeaponComponent::OnReloadFinished);
+		}else
+		{
+			UE_LOG(LogWeaponComponent, Error, TEXT("No reload anim notify!"));
+			checkNoEntry();
 		}
 	}
 }
