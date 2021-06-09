@@ -4,6 +4,7 @@
 #include "Components/STUWeaponComponent.h"
 
 #include "STUEquipFinishedAnimNotify.h"
+#include "STUReloadFinishedAnimNotify.h"
 #include "GameFramework/Character.h"
 #include "Weapon/STUBaseWeapon.h"
 
@@ -56,19 +57,20 @@ void USTUWeaponComponent::SpawnWeapons()
 
 	if (!Character || !GetWorld()) { return; }
 
-	for (auto OneWeaponData : WeaponData)
+	for (auto WeaponData : WeaponsData)
 	{
-		auto Weapon = GetWorld()->SpawnActor<ASTUBaseWeapon>(OneWeaponData.WeaponClass);
+		auto Weapon = GetWorld()->SpawnActor<ASTUBaseWeapon>(WeaponData.WeaponClass);
 		if (Weapon == nullptr) { continue; }
 		Weapon->SetOwner(Character);
 		Weapons.Add(Weapon);
+		Weapon->OnClipEmpty.AddUObject(this, &USTUWeaponComponent::OnClipEmpty);
 		AttachWeaponToSocket(Weapon, Character->GetMesh(), WeaponArmorySocketName);
 	}
 }
 
 void USTUWeaponComponent::EquipWeapon(int WeaponIndex)
 {
-	if (WeaponIndex < 0 || WeaponIndex >= WeaponData.Num()) { return; }
+	if (WeaponIndex < 0 || WeaponIndex >= WeaponsData.Num()) { return; }
 
 	ACharacter* Character = Cast<ACharacter>(GetOwner());
 	if (!Character) { return; }
@@ -78,7 +80,7 @@ void USTUWeaponComponent::EquipWeapon(int WeaponIndex)
 		AttachWeaponToSocket(CurrentWeapon, Character->GetMesh(), WeaponArmorySocketName);
 	}
 	CurrentWeapon = Weapons[WeaponIndex];
-	const auto CurrentWeaponData = WeaponData.FindByPredicate([&](const FWeaponData& Data)
+	const auto CurrentWeaponData = WeaponsData.FindByPredicate([&](const FWeaponData& Data)
 	{
 		return Data.WeaponClass == CurrentWeapon->GetClass();
 	});
@@ -99,15 +101,19 @@ void USTUWeaponComponent::PlayAnimMontage(UAnimMontage* Animation) const
 
 void USTUWeaponComponent::InitAnimations()
 {
-	if (!EquipAnimMontage) { return; }
-	const auto NotifyEvents = EquipAnimMontage->Notifies;
-	for (auto NotifyEvent : NotifyEvents)
+	auto EquipFinishNotify = FindNotifyByClass<USTUEquipFinishedAnimNotify>(EquipAnimMontage);
+	if (EquipFinishNotify)
 	{
-		auto EquipFinishNotify = Cast<USTUEquipFinishedAnimNotify>(NotifyEvent.Notify);
-		if (EquipFinishNotify)
+		EquipFinishNotify->OnNotified.AddUObject(this, &USTUWeaponComponent::OnEquipFinished);
+	}
+
+
+	for (auto WeaponData : WeaponsData)
+	{
+		auto ReloadFinishNotify = FindNotifyByClass<USTUReloadFinishedAnimNotify>(WeaponData.ReloadAnimMontage);
+		if (ReloadFinishNotify)
 		{
-			EquipFinishNotify->OnNotified.AddUObject(this, &USTUWeaponComponent::OnEquipFinished);
-			break;
+			ReloadFinishNotify->OnNotified.AddUObject(this, &USTUWeaponComponent::OnReloadFinished);
 		}
 	}
 }
@@ -119,19 +125,47 @@ void USTUWeaponComponent::OnEquipFinished(USkeletalMeshComponent* MeshComp)
 	EquipAnimInProgress = false;
 }
 
+void USTUWeaponComponent::OnReloadFinished(USkeletalMeshComponent* MeshComp)
+{
+	ACharacter* Character = Cast<ACharacter>(GetOwner());
+	if (!Character || Character->GetMesh() != MeshComp) { return; }
+	ReloadAnimInProgress = false;
+}
+
 bool USTUWeaponComponent::CanFire() const
 {
-	return CurrentWeapon != nullptr && !EquipAnimInProgress;
+	return CurrentWeapon != nullptr && !EquipAnimInProgress && !ReloadAnimInProgress;
 }
 
 bool USTUWeaponComponent::CanEquip() const
 {
-	return !EquipAnimInProgress;
+	return !EquipAnimInProgress && !ReloadAnimInProgress;
+}
+
+bool USTUWeaponComponent::CanReload() const
+{
+	return CurrentWeapon != nullptr && !EquipAnimInProgress && !ReloadAnimInProgress && CurrentWeapon->CanReload();
+}
+
+void USTUWeaponComponent::OnClipEmpty()
+{
+	ChangeClip();
+}
+
+void USTUWeaponComponent::ChangeClip()
+{
+	if (!CanReload()) { return; }
+	
+	CurrentWeapon->StopFire();
+	CurrentWeapon->ChangeClip();
+	ReloadAnimInProgress = true;
+	PlayAnimMontage(CurrentWeaponReloadAnimMontage);
 }
 
 void USTUWeaponComponent::AttachWeaponToSocket(ASTUBaseWeapon* Weapon, USceneComponent* Parent, const FName& SocketName)
 {
 	if (!Weapon || !Parent) { return; }
+	
 	const FAttachmentTransformRules AttachmentRules(EAttachmentRule::SnapToTarget, false);
 	Weapon->AttachToComponent(Parent, AttachmentRules, SocketName);
 }
@@ -147,5 +181,5 @@ void USTUWeaponComponent::NextWeapon()
 
 void USTUWeaponComponent::Reload()
 {
-	PlayAnimMontage(CurrentWeaponReloadAnimMontage);
+	ChangeClip();
 }

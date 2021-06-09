@@ -30,7 +30,7 @@ public:
 
 protected:
 	UPROPERTY(EditDefaultsOnly, Category="Weapon")
-	TArray<FWeaponData> WeaponData;
+	TArray<FWeaponData> WeaponsData;
 	UPROPERTY(EditDefaultsOnly, Category="Weapon")
 	FName WeaponEquipSocketName = "WeaponSocket";
 	UPROPERTY(EditDefaultsOnly, Category="Weapon")
@@ -52,6 +52,7 @@ private:
 
 	int CurrentWeaponIndex = 0;
 	bool EquipAnimInProgress = false;
+	bool ReloadAnimInProgress = false;
 
 	static void AttachWeaponToSocket(ASTUBaseWeapon* Weapon, USceneComponent* Parent, const FName& SocketName);
 	void SpawnWeapons();
@@ -59,6 +60,27 @@ private:
 	void PlayAnimMontage(UAnimMontage* Animation) const;
 	void InitAnimations();
 	void OnEquipFinished(USkeletalMeshComponent* MeshComp);
+	void OnReloadFinished(USkeletalMeshComponent* MeshComp);
 	bool CanFire() const;
 	bool CanEquip() const;
+	bool CanReload() const;
+	void OnClipEmpty();
+	void ChangeClip();
+
+	template<typename T>
+	T* FindNotifyByClass(UAnimSequenceBase* Animation)
+	{
+		if (!EquipAnimMontage) { return nullptr; }
+	
+		const auto NotifyEvents = Animation->Notifies;
+		for (auto NotifyEvent : NotifyEvents)
+		{
+			auto Notify = Cast<T>(NotifyEvent.Notify);
+			if (Notify)
+			{
+				return Notify;
+			}
+		}
+		return nullptr;
+	}
 };
