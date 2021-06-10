@@ -8,7 +8,7 @@
 #include "Components/ActorComponent.h"
 #include "STUHealthComponent.generated.h"
 
-UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
+UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
 class SHOOTTHEMUP_API USTUHealthComponent : public UActorComponent
 {
 	GENERATED_BODY()
@@ -22,6 +22,10 @@ public:
 	virtual void TickComponent(float DeltaTime, enum ELevelTick TickType,
 	                           FActorComponentTickFunction* ThisTickFunction) override;
 	float GetHealth() const { return Health; }
+
+	UFUNCTION(BlueprintCallable, Category = "Health")
+	float GetNormalizedHealth() const { return Health / MaxHealth; }
+
 	UFUNCTION(BlueprintCallable)
 	bool IsDead() const { return FMath::IsNearlyZero(Health); }
 
