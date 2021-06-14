@@ -17,6 +17,7 @@ public:
 	void StopFire();
 	void NextWeapon();
 	void Reload();
+	bool TryGetWeaponUIData(FWeaponUIData& UIData) const;
 
 protected:
 	UPROPERTY(EditDefaultsOnly, Category="Weapon")

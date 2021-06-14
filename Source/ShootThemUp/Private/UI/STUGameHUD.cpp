@@ -5,10 +5,19 @@
 
 #include "Engine/Canvas.h"
 
+void ASTUGameHUD::BeginPlay()
+{
+	Super::BeginPlay();
+	auto PlayerHUDWidget = CreateWidget<UUserWidget>(GetWorld(), PlayerHudWidgetClass);
+	if(PlayerHudWidgetClass)
+	{
+		PlayerHUDWidget->AddToViewport();
+	}
+}
+
 void ASTUGameHUD::DrawHUD()
 {
 	Super::DrawHUD();
-	DrawCrossHair();
 }
 
 void ASTUGameHUD::DrawCrossHair()

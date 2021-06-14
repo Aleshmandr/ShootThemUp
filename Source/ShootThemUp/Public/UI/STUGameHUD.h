@@ -3,6 +3,8 @@
 #pragma once
 
 #include "CoreMinimal.h"
+
+#include "STUPlayerHUDWidget.h"
 #include "GameFramework/HUD.h"
 #include "STUGameHUD.generated.h"
 
@@ -11,7 +13,12 @@ class SHOOTTHEMUP_API ASTUGameHUD : public AHUD
 {
 	GENERATED_BODY()
 
-	private:
+protected:
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="UI")
+	TSubclassOf<UUserWidget> PlayerHudWidgetClass;
+	
+	virtual void BeginPlay() override;
+private:
 	virtual void DrawHUD() override;
 	void DrawCrossHair();
 };

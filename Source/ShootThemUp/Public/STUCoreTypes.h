@@ -29,3 +29,13 @@ struct FWeaponData
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Weapon")
 	UAnimMontage* ReloadAnimMontage;
 };
+
+USTRUCT(BlueprintType)
+struct FWeaponUIData
+{
+	GENERATED_BODY()
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="UI")
+	UTexture2D* Icon;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="UI")
+	UTexture2D* Crosshair;
+};

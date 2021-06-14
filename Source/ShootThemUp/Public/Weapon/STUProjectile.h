@@ -25,13 +25,13 @@ protected:
 	UPROPERTY(VisibleDefaultsOnly, Category="Weapon")
 	UProjectileMovementComponent* MovementComponent;
 
-	UPROPERTY(VisibleDefaultsOnly, Category="Weapon")
+	UPROPERTY(EditDefaultsOnly, Category="Weapon")
 	float DamageRadius = 200.0f;
 
-	UPROPERTY(VisibleDefaultsOnly, Category="Weapon")
+	UPROPERTY(EditDefaultsOnly, Category="Weapon")
 	float Damage = 50.0f;
 
-	UPROPERTY(VisibleDefaultsOnly, Category="Weapon")
+	UPROPERTY(EditDefaultsOnly, Category="Weapon")
 	float LifeTime = 5.0f;
 
 	UPROPERTY(VisibleDefaultsOnly, Category="Weapon")

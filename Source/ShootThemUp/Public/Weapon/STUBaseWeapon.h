@@ -15,13 +15,14 @@ class SHOOTTHEMUP_API ASTUBaseWeapon : public AActor
 
 public:
 	FOnClipEmptySignature OnClipEmpty;
-	
+
 	ASTUBaseWeapon();
-	
+
 	void ChangeClip();
 	bool CanReload() const;
 	virtual void StartFire();
 	virtual void StopFire();
+	FWeaponUIData GetUIData() const { return UIData; }
 
 protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category="Components")
@@ -32,6 +33,8 @@ protected:
 	float TraceMaxDistance = 10000.0f;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Weapon")
 	FAmmoData DefaultAmmo{30, 5, false};
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="UI")
+	FWeaponUIData UIData;
 
 	virtual void BeginPlay() override;
 	virtual void MakeShot();
@@ -45,7 +48,7 @@ protected:
 	bool IsAmmoEmpty() const;
 	bool IsClipEmpty() const;
 	void LogAmmo();
-	
+
 private:
 	FAmmoData CurrentAmmo;
 };

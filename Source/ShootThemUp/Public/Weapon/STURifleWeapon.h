@@ -19,11 +19,11 @@ public:
 	virtual void StopFire() override;
 
 protected:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Weapon")
 	float TimePerShot = 0.1f;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Weapon")
 	float ShotDirHalfAngle;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Weapon")
 	float Damage = 10.0f;
 
 	virtual void MakeShot() override;
