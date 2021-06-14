@@ -18,6 +18,18 @@ float USTUPlayerHUDWidget::GetNormalizedHealth() const
 	return HealthComponent->GetNormalizedHealth();
 }
 
+bool USTUPlayerHUDWidget::GetAmmoData(FAmmoData& AmmoData) const
+{
+	const auto PlayerPawn = GetOwningPlayerPawn();
+	if (PlayerPawn == nullptr) { return false; }
+	
+	const auto Component = PlayerPawn->GetComponentByClass(USTUWeaponComponent::StaticClass());
+	const auto WeaponComponent = Cast<USTUWeaponComponent>(Component);
+	if (WeaponComponent == nullptr) { return false; }
+	
+	return WeaponComponent->TryGetAmmoData(AmmoData);
+}
+
 bool USTUPlayerHUDWidget::TryGetWeaponUIData(FWeaponUIData& UIData) const
 {
 	const auto PlayerPawn = GetOwningPlayerPawn();

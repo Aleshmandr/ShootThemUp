@@ -19,5 +19,7 @@ class SHOOTTHEMUP_API USTUPlayerHUDWidget : public UUserWidget
 	UFUNCTION(BlueprintCallable, Category="UI")
 	float GetNormalizedHealth() const;
 	UFUNCTION(BlueprintCallable, Category="UI")
+	bool GetAmmoData(FAmmoData& AmmoData) const;
+	UFUNCTION(BlueprintCallable, Category="UI")
 	bool TryGetWeaponUIData(FWeaponUIData& UIData) const;
 };
