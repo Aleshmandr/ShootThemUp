@@ -8,9 +8,9 @@
 #include "Blueprint/UserWidget.h"
 #include "STUPlayerHUDWidget.generated.h"
 
-/**
- * 
- */
+class USTUWeaponComponent;
+class USTUHealthComponent;
+
 UCLASS()
 class SHOOTTHEMUP_API USTUPlayerHUDWidget : public UUserWidget
 {
@@ -22,4 +22,12 @@ class SHOOTTHEMUP_API USTUPlayerHUDWidget : public UUserWidget
 	bool GetAmmoData(FAmmoData& AmmoData) const;
 	UFUNCTION(BlueprintCallable, Category="UI")
 	bool TryGetWeaponUIData(FWeaponUIData& UIData) const;
+	UFUNCTION(BlueprintCallable, Category="UI")
+	bool IsPlayerAlive() const;
+	UFUNCTION(BlueprintCallable, Category="UI")
+	bool IsPlayerSpectating() const;
+	
+private:
+	USTUWeaponComponent* GetWeaponComponent() const;
+	USTUHealthComponent* GetHealthComponent() const;
 };
