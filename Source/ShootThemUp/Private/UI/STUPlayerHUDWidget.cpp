@@ -4,11 +4,12 @@
 #include "UI/STUPlayerHUDWidget.h"
 
 #include "STUHealthComponent.h"
+#include "STUUtils.h"
 #include "STUWeaponComponent.h"
 
 float USTUPlayerHUDWidget::GetNormalizedHealth() const
 {
-	const auto HealthComponent = GetHealthComponent();
+	const auto HealthComponent = STUUtils::GetSTUPlayerComponent<USTUHealthComponent>(GetOwningPlayerPawn());
 	if (HealthComponent == nullptr) { return 0.f; }
 
 	return HealthComponent->GetNormalizedHealth();
@@ -16,7 +17,7 @@ float USTUPlayerHUDWidget::GetNormalizedHealth() const
 
 bool USTUPlayerHUDWidget::GetAmmoData(FAmmoData& AmmoData) const
 {
-	const auto WeaponComponent = GetWeaponComponent();
+	const auto WeaponComponent = STUUtils::GetSTUPlayerComponent<USTUWeaponComponent>(GetOwningPlayerPawn());
 	if (WeaponComponent == nullptr) { return false; }
 
 	return WeaponComponent->TryGetAmmoData(AmmoData);
@@ -24,7 +25,7 @@ bool USTUPlayerHUDWidget::GetAmmoData(FAmmoData& AmmoData) const
 
 bool USTUPlayerHUDWidget::TryGetWeaponUIData(FWeaponUIData& UIData) const
 {
-	const auto WeaponComponent = GetWeaponComponent();
+	const auto WeaponComponent = STUUtils::GetSTUPlayerComponent<USTUWeaponComponent>(GetOwningPlayerPawn());
 	if (WeaponComponent == nullptr) { return false; }
 
 	return WeaponComponent->TryGetWeaponUIData(UIData);
@@ -32,7 +33,7 @@ bool USTUPlayerHUDWidget::TryGetWeaponUIData(FWeaponUIData& UIData) const
 
 bool USTUPlayerHUDWidget::IsPlayerAlive() const
 {
-	const auto HealthComponent = GetHealthComponent();
+	const auto HealthComponent = STUUtils::GetSTUPlayerComponent<USTUHealthComponent>(GetOwningPlayerPawn());
 	return HealthComponent != nullptr && !HealthComponent->IsDead();
 }
 
@@ -40,22 +41,4 @@ bool USTUPlayerHUDWidget::IsPlayerSpectating() const
 {
 	const auto Controller = GetOwningPlayer();
 	return Controller && Controller->GetStateName() == NAME_Spectating;
-}
-
-USTUWeaponComponent* USTUPlayerHUDWidget::GetWeaponComponent() const
-{
-	const auto PlayerPawn = GetOwningPlayerPawn();
-	if (PlayerPawn == nullptr) { return nullptr; }
-
-	const auto Component = PlayerPawn->GetComponentByClass(USTUWeaponComponent::StaticClass());
-	return Cast<USTUWeaponComponent>(Component);
-}
-
-USTUHealthComponent* USTUPlayerHUDWidget::GetHealthComponent() const
-{
-	const auto PlayerPawn = GetOwningPlayerPawn();
-	if (PlayerPawn == nullptr) { return nullptr; }
-
-	const auto Component = PlayerPawn->GetComponentByClass(USTUHealthComponent::StaticClass());
-	return Cast<USTUHealthComponent>(Component);
 }
