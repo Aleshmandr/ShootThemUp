@@ -37,7 +37,7 @@ void ASTUBasePickup::NotifyActorBeginOverlap(AActor* OtherActor)
 void ASTUBasePickup::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	AddActorLocalRotation(FRotator(0, RotationYaw, 0));
+	AddActorLocalRotation(FRotator(0, RotationYaw * DeltaTime, 0));
 }
 
 void ASTUBasePickup::Respawn()

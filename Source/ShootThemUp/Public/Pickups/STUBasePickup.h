@@ -27,7 +27,7 @@ protected:
 	float RespawnTime = 10.0f;
 
 	UPROPERTY(EditDefaultsOnly, Category="Animation")
-	float RotationSpeed = 5.0f;
+	float RotationSpeed = 360.0f;
 	
 	virtual void BeginPlay() override;
 	virtual void NotifyActorBeginOverlap(AActor* OtherActor) override;
