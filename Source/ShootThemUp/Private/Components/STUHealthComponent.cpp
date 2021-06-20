@@ -73,6 +73,16 @@ void USTUHealthComponent::HandleTakeAnyDamage(AActor* DamagedActor, float Damage
 	}
 }
 
+bool USTUHealthComponent::TryHeal(float HealAmount)
+{
+	if (!IsDead() &&  Health < MaxHealth)
+	{
+		SetHealth(Health + HealAmount);
+		return true;
+	}
+	return false;
+}
+
 void USTUHealthComponent::OnLanded(const FHitResult& Hit)
 {
 	const float LandingVelocity = -OwnerCharacter->GetVelocity().Z;

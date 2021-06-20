@@ -24,6 +24,7 @@ public:
 	virtual void StopFire();
 	FWeaponUIData GetUIData() const { return UIData; }
 	FAmmoData GetAmmoData() const { return CurrentAmmo; }
+	bool TryAddAmmo(const int Clips);
 
 protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category="Components")

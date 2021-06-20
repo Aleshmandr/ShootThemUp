@@ -31,6 +31,21 @@ void ASTUBaseWeapon::StopFire()
 {
 }
 
+bool ASTUBaseWeapon::TryAddAmmo(const int Clips)
+{
+	if (!CurrentAmmo.IsInfinite && CurrentAmmo.Clips < DefaultAmmo.Clips && Clips > 0)
+	{
+		const bool AutoReload = IsAmmoEmpty();
+		CurrentAmmo.Clips = FMath::Clamp(CurrentAmmo.Clips + Clips, 0, DefaultAmmo.Clips);
+		if(AutoReload)
+		{
+			OnClipEmpty.Broadcast(this);
+		}
+		return true;
+	}
+	return false;
+}
+
 void ASTUBaseWeapon::MakeShot()
 {
 }
@@ -47,7 +62,7 @@ APlayerController* ASTUBaseWeapon::GetPlayerController() const
 
 void ASTUBaseWeapon::DecreaseAmmo()
 {
-	if(CurrentAmmo.Bullets == 0)
+	if (CurrentAmmo.Bullets == 0)
 	{
 		UE_LOG(LogWeapon, Display, TEXT("No more bullets"));
 		return;
@@ -55,7 +70,7 @@ void ASTUBaseWeapon::DecreaseAmmo()
 	CurrentAmmo.Bullets--;
 	if (!IsAmmoEmpty() && IsClipEmpty())
 	{
-		OnClipEmpty.Broadcast();
+		OnClipEmpty.Broadcast(this);
 		ChangeClip();
 	}
 }
@@ -73,11 +88,11 @@ bool ASTUBaseWeapon::IsClipEmpty() const
 void ASTUBaseWeapon::ChangeClip()
 {
 	if (!CanReload()) { return; }
-	
+
 	CurrentAmmo.Bullets = DefaultAmmo.Bullets;
 	if (!CurrentAmmo.IsInfinite)
 	{
-		if(CurrentAmmo.Clips == 0)
+		if (CurrentAmmo.Clips == 0)
 		{
 			UE_LOG(LogWeapon, Display, TEXT("No more clips"));
 			return;

@@ -29,6 +29,8 @@ public:
 	UFUNCTION(BlueprintCallable)
 	bool IsDead() const { return FMath::IsNearlyZero(Health); }
 
+	bool TryHeal(float HealAmount);
+
 protected:
 	UPROPERTY(EditDefaultsOnly, Category= "Health", BlueprintReadWrite, meta = (ClampMin = 0, ClampMax = 1000))
 	float MaxHealth = 100.f;

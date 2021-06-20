@@ -21,7 +21,7 @@ USTUWeaponComponent::USTUWeaponComponent()
 void USTUWeaponComponent::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
 	SpawnWeapons();
 	EquipWeapon(CurrentWeaponIndex);
 	InitAnimations();
@@ -107,20 +107,22 @@ void USTUWeaponComponent::InitAnimations()
 	if (EquipFinishNotify)
 	{
 		EquipFinishNotify->OnNotified.AddUObject(this, &USTUWeaponComponent::OnEquipFinished);
-	}else
+	}
+	else
 	{
 		UE_LOG(LogWeaponComponent, Error, TEXT("No equip anim notify!"));
 		checkNoEntry();
 	}
 
-
 	for (auto WeaponData : WeaponsData)
 	{
-		auto ReloadFinishNotify = AnimUtils::FindNotifyByClass<USTUReloadFinishedAnimNotify>(WeaponData.ReloadAnimMontage);
+		auto ReloadFinishNotify = AnimUtils::FindNotifyByClass<USTUReloadFinishedAnimNotify>(
+			WeaponData.ReloadAnimMontage);
 		if (ReloadFinishNotify)
 		{
 			ReloadFinishNotify->OnNotified.AddUObject(this, &USTUWeaponComponent::OnReloadFinished);
-		}else
+		}
+		else
 		{
 			UE_LOG(LogWeaponComponent, Error, TEXT("No reload anim notify!"));
 			checkNoEntry();
@@ -157,15 +159,18 @@ bool USTUWeaponComponent::CanReload() const
 	return CurrentWeapon != nullptr && !EquipAnimInProgress && !ReloadAnimInProgress && CurrentWeapon->CanReload();
 }
 
-void USTUWeaponComponent::OnClipEmpty()
+void USTUWeaponComponent::OnClipEmpty(ASTUBaseWeapon* Weapon)
 {
-	ChangeClip();
+	if (Weapon != nullptr && Weapon == CurrentWeapon)
+	{
+		ChangeClip();
+	}
 }
 
 void USTUWeaponComponent::ChangeClip()
 {
 	if (!CanReload()) { return; }
-	
+
 	CurrentWeapon->StopFire();
 	CurrentWeapon->ChangeClip();
 	ReloadAnimInProgress = true;
@@ -175,7 +180,7 @@ void USTUWeaponComponent::ChangeClip()
 void USTUWeaponComponent::AttachWeaponToSocket(ASTUBaseWeapon* Weapon, USceneComponent* Parent, const FName& SocketName)
 {
 	if (!Weapon || !Parent) { return; }
-	
+
 	const FAttachmentTransformRules AttachmentRules(EAttachmentRule::SnapToTarget, false);
 	Weapon->AttachToComponent(Parent, AttachmentRules, SocketName);
 }
@@ -196,7 +201,7 @@ void USTUWeaponComponent::Reload()
 
 bool USTUWeaponComponent::TryGetWeaponUIData(FWeaponUIData& UIData) const
 {
-	if(CurrentWeapon)
+	if (CurrentWeapon)
 	{
 		UIData = CurrentWeapon->GetUIData();
 		return true;
@@ -206,10 +211,25 @@ bool USTUWeaponComponent::TryGetWeaponUIData(FWeaponUIData& UIData) const
 
 bool USTUWeaponComponent::TryGetAmmoData(FAmmoData& AmmoData) const
 {
-	if(CurrentWeapon)
+	if (CurrentWeapon)
 	{
 		AmmoData = CurrentWeapon->GetAmmoData();
 		return true;
+	}
+	return false;
+}
+
+bool USTUWeaponComponent::TryAddAmmo(const TSubclassOf<ASTUBaseWeapon> WeaponType, const int Clips)
+{
+	if (CurrentWeapon)
+	{
+		for (auto Weapon : Weapons)
+		{
+			if (Weapon && Weapon->IsA(WeaponType))
+			{
+				return Weapon->TryAddAmmo(Clips);
+			}
+		}
 	}
 	return false;
 }
