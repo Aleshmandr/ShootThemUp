@@ -3,9 +3,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
+
 #include "GameFramework/Actor.h"
 #include "STUProjectile.generated.h"
 
+class USTUWeaponFXComponent;
 class UProjectileMovementComponent;
 class USphereComponent;
 
@@ -36,6 +38,9 @@ protected:
 
 	UPROPERTY(VisibleDefaultsOnly, Category="Weapon")
 	bool DoFullDamage;
+
+	UPROPERTY(VisibleAnywhere, Category="VFX")
+	USTUWeaponFXComponent* WeaponFXComponent;
 
 	virtual void BeginPlay() override;
 

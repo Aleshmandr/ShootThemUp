@@ -2,10 +2,22 @@
 
 
 #include "Weapon/STURifleWeapon.h"
+#include "STUWeaponFXComponent.h"
 #include "DrawDebugHelpers.h"
 #include "STUBaseCharacter.h"
 #include "GameFramework/Character.h"
 
+
+ASTURifleWeapon::ASTURifleWeapon()
+{
+	WeaponFXComponent = CreateDefaultSubobject<USTUWeaponFXComponent>("WeaponFXComponent");
+}
+
+void ASTURifleWeapon::BeginPlay()
+{
+	Super::BeginPlay();
+	check(WeaponFXComponent);
+}
 
 void ASTURifleWeapon::StartFire()
 {
@@ -40,8 +52,9 @@ void ASTURifleWeapon::MakeShot()
 	if (MakeHit(HitResult, TraceStart, TraceEnd))
 	{
 		DrawDebugLine(GetWorld(), MuzzleLocation, HitResult.ImpactPoint, FColor::Red, false, 1.f, 0.f, 2.f);
-		DrawDebugSphere(GetWorld(), HitResult.ImpactPoint, 10.f, 8, FColor::Red, false, 3.f, 0.f);
+		//DrawDebugSphere(GetWorld(), HitResult.ImpactPoint, 10.f, 8, FColor::Red, false, 3.f, 0.f);
 		MakeDamage(HitResult);
+		WeaponFXComponent->PlayImpactFX(HitResult);
 	}
 	else
 	{
