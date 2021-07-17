@@ -144,6 +144,7 @@ bool ASTUBaseWeapon::MakeHit(FHitResult& HitResult, const FVector& TraceStart, c
 {
 	FCollisionQueryParams QueryParams;
 	QueryParams.AddIgnoredActor(GetOwner());
+	QueryParams.bReturnPhysicalMaterial = true;
 	return GetWorld()->LineTraceSingleByChannel(HitResult, TraceStart, TraceEnd, ECC_Visibility, QueryParams);
 }
 
