@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "STUCoreTypes.h"
 #include "STUWeaponFXComponent.generated.h"
 
 class UNiagaraSystem;
@@ -18,8 +19,8 @@ public:
 	
 protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="VFX")
-	UNiagaraSystem* DefaultEffect;
+	FImpactFXData DefaultEffect;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="VFX")
-	TMap<UPhysicalMaterial*, UNiagaraSystem*> Effects;
+	TMap<UPhysicalMaterial*, FImpactFXData> Effects;
 };
