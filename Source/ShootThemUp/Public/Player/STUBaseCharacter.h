@@ -47,6 +47,7 @@ protected:
 	UAnimMontage* DeathAnimMontage;
 
 	void OnDeath();
+	
 
 	void OnHealthChanged(float) const;
 
@@ -61,9 +62,11 @@ public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 private:
+	FTimerHandle RagdollTimerHandle;
 	bool WantShift;
 	void MoveForward(float Axis);
 	void MoveRight(float Axis);
 	void StartShift();
 	void StopShift();
+	void ActivateRagdoll();
 };
