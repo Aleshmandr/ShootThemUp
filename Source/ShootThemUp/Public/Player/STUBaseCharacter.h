@@ -47,9 +47,8 @@ protected:
 	UAnimMontage* DeathAnimMontage;
 
 	void OnDeath();
-	
 
-	void OnHealthChanged(float) const;
+	void OnHealthChanged(float Health, float Delta) const;
 
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;

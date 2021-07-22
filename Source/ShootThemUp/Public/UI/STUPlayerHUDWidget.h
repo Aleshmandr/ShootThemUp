@@ -12,7 +12,7 @@ UCLASS()
 class SHOOTTHEMUP_API USTUPlayerHUDWidget : public UUserWidget
 {
 	GENERATED_BODY()
-	public:
+public:
 	UFUNCTION(BlueprintCallable, Category="UI")
 	float GetNormalizedHealth() const;
 	UFUNCTION(BlueprintCallable, Category="UI")
@@ -23,4 +23,10 @@ class SHOOTTHEMUP_API USTUPlayerHUDWidget : public UUserWidget
 	bool IsPlayerAlive() const;
 	UFUNCTION(BlueprintCallable, Category="UI")
 	bool IsPlayerSpectating() const;
+	UFUNCTION(BlueprintImplementableEvent, Category="UI")
+	void OnDamage();
+
+private:
+	virtual bool Initialize() override;
+	void HandleHealthChange(float Health, float Delta);
 };

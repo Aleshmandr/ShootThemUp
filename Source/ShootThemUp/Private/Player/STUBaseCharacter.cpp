@@ -39,7 +39,7 @@ void ASTUBaseCharacter::BeginPlay()
 	check(GetMesh());
 	HealthComponent->OnDeath.AddUObject(this, &ASTUBaseCharacter::OnDeath);
 	HealthComponent->OnHealthChanged.AddUObject(this, &ASTUBaseCharacter::OnHealthChanged);
-	OnHealthChanged(HealthComponent->GetHealth());
+	OnHealthChanged(HealthComponent->GetHealth(), 0.0f);
 }
 
 // Called every frame
@@ -123,7 +123,7 @@ void ASTUBaseCharacter::ActivateRagdoll()
 	GetMesh()->SetSimulatePhysics(true);
 }
 
-void ASTUBaseCharacter::OnHealthChanged(float Health) const
+void ASTUBaseCharacter::OnHealthChanged(float Health, float Delta) const
 {
 	HealthTextComponent->SetText(FText::FromString(FString::Printf(TEXT("%.0f"), Health)));
 }

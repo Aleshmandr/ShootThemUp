@@ -42,8 +42,9 @@ void USTUHealthComponent::BeginPlay()
 
 void USTUHealthComponent::SetHealth(float NewHealth)
 {
+	const float HealthBeforeChange = Health;
 	Health = FMath::Clamp(NewHealth, 0.f, MaxHealth);
-	OnHealthChanged.Broadcast(Health);
+	OnHealthChanged.Broadcast(Health, Health - HealthBeforeChange);
 }
 
 void USTUHealthComponent::HandleTakeAnyDamage(AActor* DamagedActor, float Damage, const UDamageType* DamageType,
