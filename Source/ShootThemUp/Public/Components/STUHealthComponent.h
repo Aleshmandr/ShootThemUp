@@ -8,6 +8,8 @@
 #include "Components/ActorComponent.h"
 #include "STUHealthComponent.generated.h"
 
+class UCameraShakeBase;
+
 UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
 class SHOOTTHEMUP_API USTUHealthComponent : public UActorComponent
 {
@@ -46,6 +48,8 @@ protected:
 	FVector2D LandedDamageVelocity = FVector2D(800.0f, 1200.0f);
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Damage")
 	FVector2D LandedDamage = FVector2D(10.0f, 100.0f);
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="VFX")
+	TSubclassOf<UCameraShakeBase> CameraShake;
 
 	virtual void BeginPlay() override;
 
@@ -63,4 +67,6 @@ private:
 	                         AController* InstigatedBy, AActor* DamageCauser);
 	UFUNCTION()
 	void OnLanded(const FHitResult& Hit);
+
+	void PlayCameraShake() const;
 };

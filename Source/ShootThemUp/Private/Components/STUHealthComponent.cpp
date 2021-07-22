@@ -56,6 +56,7 @@ void USTUHealthComponent::HandleTakeAnyDamage(AActor* DamagedActor, float Damage
 	UE_LOG(LogHealth, Log, TEXT("HandleTakeAnyDamage %f"), Damage);
 	HealTimer = AutoHealDelay;
 	SetHealth(Health - Damage);
+	
 	if (DamageType != nullptr)
 	{
 		if (DamageType->IsA<USTUFireDamageType>())
@@ -71,6 +72,7 @@ void USTUHealthComponent::HandleTakeAnyDamage(AActor* DamagedActor, float Damage
 	{
 		OnDeath.Broadcast();
 	}
+	PlayCameraShake();
 }
 
 bool USTUHealthComponent::TryHeal(float HealAmount)
@@ -95,4 +97,23 @@ void USTUHealthComponent::OnLanded(const FHitResult& Hit)
 		UE_LOG(LogHealth, Log, TEXT("Landing damage = %f"), Damage);
 		OwnerCharacter->TakeDamage(Damage, FDamageEvent{}, nullptr, nullptr);
 	}
+}
+
+void USTUHealthComponent::PlayCameraShake() const
+{
+	if(IsDead())
+	{
+		return;
+	}
+	const auto PlayerPawn = Cast<APawn>(GetOwner());
+	if(PlayerPawn == nullptr)
+	{
+		return;
+	}
+	const auto PlayerController = PlayerPawn->GetController<APlayerController>();
+	if(PlayerController == nullptr || PlayerController->PlayerCameraManager == nullptr)
+	{
+		return;
+	}
+	PlayerController->PlayerCameraManager->StartCameraShake(CameraShake);
 }
