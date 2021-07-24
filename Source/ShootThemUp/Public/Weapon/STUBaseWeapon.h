@@ -8,6 +8,8 @@
 #include "GameFramework/Actor.h"
 #include "STUBaseWeapon.generated.h"
 
+class UNiagaraComponent;
+
 UCLASS()
 class SHOOTTHEMUP_API ASTUBaseWeapon : public AActor
 {
@@ -37,6 +39,8 @@ protected:
 	FAmmoData DefaultAmmo{30, 5, false};
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="UI")
 	FWeaponUIData UIData;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="VFX")
+	UNiagaraSystem* MuzzleFX;
 
 	virtual void BeginPlay() override;
 	virtual void MakeShot();
@@ -50,6 +54,7 @@ protected:
 	bool IsAmmoEmpty() const;
 	bool IsClipEmpty() const;
 	void LogAmmo();
+	UNiagaraComponent* SpawnMuzzleFX() const;
 
 private:
 	FAmmoData CurrentAmmo;

@@ -3,7 +3,8 @@
 
 #include "Weapon/STUBaseWeapon.h"
 #include "DrawDebugHelpers.h"
-#include "STUBaseCharacter.h"
+#include "NiagaraFunctionLibrary.h"
+#include "NiagaraComponent.h"
 #include "GameFramework/Character.h"
 
 DEFINE_LOG_CATEGORY_STATIC(LogWeapon, All, All)
@@ -37,7 +38,7 @@ bool ASTUBaseWeapon::TryAddAmmo(const int Clips)
 	{
 		const bool AutoReload = IsAmmoEmpty();
 		CurrentAmmo.Clips = FMath::Clamp(CurrentAmmo.Clips + Clips, 0, DefaultAmmo.Clips);
-		if(AutoReload)
+		if (AutoReload)
 		{
 			OnClipEmpty.Broadcast(this);
 		}
@@ -112,6 +113,19 @@ void ASTUBaseWeapon::LogAmmo()
 	FString AmmoInfo = "Ammo: " + FString::FromInt(CurrentAmmo.Bullets) + " / ";
 	AmmoInfo += CurrentAmmo.IsInfinite ? "Infinite" : FString::FromInt(CurrentAmmo.Clips);
 	UE_LOG(LogWeapon, Display, TEXT("%s"), *AmmoInfo);
+}
+
+UNiagaraComponent* ASTUBaseWeapon::SpawnMuzzleFX() const
+{
+	return UNiagaraFunctionLibrary::SpawnSystemAttached(
+		MuzzleFX,
+		WeaponMesh,
+		MuzzleSocketName,
+		FVector::ZeroVector,
+		FRotator::ZeroRotator,
+		EAttachLocation::SnapToTarget,
+		true
+	);
 }
 
 bool ASTUBaseWeapon::GetPlayerViewPoint(FVector& ViewLocation, FRotator& ViewRotation) const

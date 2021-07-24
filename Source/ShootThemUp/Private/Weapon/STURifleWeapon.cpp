@@ -6,7 +6,7 @@
 #include "DrawDebugHelpers.h"
 #include "STUBaseCharacter.h"
 #include "GameFramework/Character.h"
-
+#include "NiagaraComponent.h"
 
 ASTURifleWeapon::ASTURifleWeapon()
 {
@@ -23,11 +23,13 @@ void ASTURifleWeapon::StartFire()
 {
 	GetWorldTimerManager().SetTimer(ShotTimerHandle, this, &ASTURifleWeapon::MakeShot, TimePerShot, true);
 	MakeShot();
+	InitMuzzleFX();
 }
 
 void ASTURifleWeapon::StopFire()
 {
 	GetWorldTimerManager().ClearTimer(ShotTimerHandle);
+	SetMuzzleFXVisibility(false);
 }
 
 void ASTURifleWeapon::MakeShot()
@@ -85,4 +87,22 @@ void ASTURifleWeapon::MakeDamage(const FHitResult& HitResult)
 		return;
 	}
 	HitActor->TakeDamage(Damage, FDamageEvent(), GetPlayerController(), this);
+}
+
+void ASTURifleWeapon::InitMuzzleFX()
+{
+	if(MuzzleFXComponent == nullptr)
+	{
+		MuzzleFXComponent = SpawnMuzzleFX();
+	}
+	SetMuzzleFXVisibility(true);
+}
+
+void ASTURifleWeapon::SetMuzzleFXVisibility(bool Visible) const
+{
+	if(MuzzleFXComponent)
+	{
+		MuzzleFXComponent->SetPaused(!Visible);
+		MuzzleFXComponent->SetVisibility(Visible);
+	}
 }
