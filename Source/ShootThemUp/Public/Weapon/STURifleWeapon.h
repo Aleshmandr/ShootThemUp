@@ -29,6 +29,10 @@ protected:
 	float Damage = 10.0f;
 	UPROPERTY(VisibleAnywhere, Category="VFX")
 	USTUWeaponFXComponent* WeaponFXComponent;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="VFX")
+	FName TraceTargetName = "TraceEnd";
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="VFX")
+	UNiagaraSystem* TraceFX;
 
 	virtual void BeginPlay() override;
 	virtual void MakeShot() override;
@@ -38,8 +42,9 @@ private:
 	UPROPERTY()
 	UNiagaraComponent* MuzzleFXComponent;
 	FTimerHandle ShotTimerHandle;
-	
+
 	void MakeDamage(const FHitResult& HitResult);
 	void InitMuzzleFX();
 	void SetMuzzleFXVisibility(bool Visible) const;
+	void DrawTrace(const FVector& TraceStart, const FVector& TraceEnd) const;
 };
