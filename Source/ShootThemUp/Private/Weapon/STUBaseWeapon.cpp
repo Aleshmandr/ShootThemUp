@@ -72,7 +72,6 @@ void ASTUBaseWeapon::DecreaseAmmo()
 	if (!IsAmmoEmpty() && IsClipEmpty())
 	{
 		OnClipEmpty.Broadcast(this);
-		ChangeClip();
 	}
 }
 

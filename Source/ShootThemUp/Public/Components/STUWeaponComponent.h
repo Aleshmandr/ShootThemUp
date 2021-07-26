@@ -39,7 +39,7 @@ private:
 
 	UPROPERTY()
 	TArray<ASTUBaseWeapon*> Weapons;
-	
+
 	UPROPERTY()
 	UAnimMontage* CurrentWeaponReloadAnimMontage = nullptr;
 
@@ -51,6 +51,7 @@ private:
 	void SpawnWeapons();
 	void EquipWeapon(int WeaponIndex);
 	void PlayAnimMontage(UAnimMontage* Animation) const;
+	void StopAnimMontage(UAnimMontage* Animation) const;
 	void InitAnimations();
 	void OnEquipFinished(USkeletalMeshComponent* MeshComp);
 	void OnReloadFinished(USkeletalMeshComponent* MeshComp);
@@ -59,4 +60,5 @@ private:
 	bool CanReload() const;
 	void OnClipEmpty(ASTUBaseWeapon* Weapon);
 	void ChangeClip();
+	void AbortReloading();
 };

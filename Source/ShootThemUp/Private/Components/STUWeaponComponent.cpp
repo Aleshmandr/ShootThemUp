@@ -45,6 +45,10 @@ void USTUWeaponComponent::StartFire()
 	{
 		CurrentWeapon->StartFire();
 	}
+	else if (CanReload())
+	{
+		Reload();
+	}
 }
 
 void USTUWeaponComponent::StopFire()
@@ -90,6 +94,7 @@ void USTUWeaponComponent::EquipWeapon(int WeaponIndex)
 	CurrentWeaponReloadAnimMontage = CurrentWeaponData ? CurrentWeaponData->ReloadAnimMontage : nullptr;
 
 	AttachWeaponToSocket(CurrentWeapon, Character->GetMesh(), WeaponEquipSocketName);
+	AbortReloading();
 	PlayAnimMontage(EquipAnimMontage);
 	EquipAnimInProgress = true;
 }
@@ -99,6 +104,13 @@ void USTUWeaponComponent::PlayAnimMontage(UAnimMontage* Animation) const
 	ACharacter* Character = Cast<ACharacter>(GetOwner());
 	if (!Character) { return; }
 	Character->PlayAnimMontage(Animation);
+}
+
+void USTUWeaponComponent::StopAnimMontage(UAnimMontage* Animation = nullptr) const
+{
+	ACharacter* Character = Cast<ACharacter>(GetOwner());
+	if (!Character) { return; }
+	Character->StopAnimMontage(Animation);
 }
 
 void USTUWeaponComponent::InitAnimations()
@@ -141,17 +153,22 @@ void USTUWeaponComponent::OnReloadFinished(USkeletalMeshComponent* MeshComp)
 {
 	ACharacter* Character = Cast<ACharacter>(GetOwner());
 	if (!Character || Character->GetMesh() != MeshComp) { return; }
+	if (CurrentWeapon)
+	{
+		CurrentWeapon->ChangeClip();
+	}
 	ReloadAnimInProgress = false;
 }
 
 bool USTUWeaponComponent::CanFire() const
 {
-	return CurrentWeapon != nullptr && !EquipAnimInProgress && !ReloadAnimInProgress;
+	return CurrentWeapon != nullptr && !EquipAnimInProgress && !ReloadAnimInProgress && CurrentWeapon->GetAmmoData().
+		Bullets > 0;
 }
 
 bool USTUWeaponComponent::CanEquip() const
 {
-	return !EquipAnimInProgress && !ReloadAnimInProgress;
+	return !EquipAnimInProgress;
 }
 
 bool USTUWeaponComponent::CanReload() const
@@ -172,9 +189,17 @@ void USTUWeaponComponent::ChangeClip()
 	if (!CanReload()) { return; }
 
 	CurrentWeapon->StopFire();
-	CurrentWeapon->ChangeClip();
 	ReloadAnimInProgress = true;
 	PlayAnimMontage(CurrentWeaponReloadAnimMontage);
+}
+
+void USTUWeaponComponent::AbortReloading()
+{
+	if (ReloadAnimInProgress)
+	{
+		StopAnimMontage();
+		ReloadAnimInProgress = false;
+	}
 }
 
 void USTUWeaponComponent::AttachWeaponToSocket(ASTUBaseWeapon* Weapon, USceneComponent* Parent, const FName& SocketName)
