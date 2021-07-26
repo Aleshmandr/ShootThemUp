@@ -34,7 +34,7 @@ void ASTUProjectile::BeginPlay()
 	MovementComponent->Velocity = ShotDirection * MovementComponent->InitialSpeed;
 	IgnoreOwner(true);
 	CollisionComponent->OnComponentHit.AddDynamic(this, &ASTUProjectile::OnProjectileHit);
-	SetLifeSpan(LifeTime);
+	GetWorldTimerManager().SetTimer(LifeTimeTimerHandle, this, &ASTUProjectile::Explode, LifeTime, false);
 }
 
 void ASTUProjectile::EndPlay(const EEndPlayReason::Type EndPlayReason)
@@ -66,6 +66,13 @@ void ASTUProjectile::Explode()
 	                                    DoFullDamage);
 
 	DrawDebugSphere(GetWorld(), GetActorLocation(), DamageRadius, 16, FColor::Red, false, 5.0f);
+	GetWorldTimerManager().SetTimer(DestroyDelayTimerHandle, this, &ASTUProjectile::TryDestroy, DestroyDelay, false);
+}
+
+void ASTUProjectile::TryDestroy()
+{
+	GetWorldTimerManager().ClearTimer(DestroyDelayTimerHandle);
+	GetWorldTimerManager().ClearTimer(LifeTimeTimerHandle);
 	Destroy();
 }
 

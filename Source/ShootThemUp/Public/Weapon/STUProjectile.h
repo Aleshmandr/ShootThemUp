@@ -36,6 +36,9 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category="Weapon")
 	float LifeTime = 5.0f;
 
+	UPROPERTY(EditDefaultsOnly, Category="Weapon")
+	float DestroyDelay = 5.0f;
+
 	UPROPERTY(VisibleDefaultsOnly, Category="Weapon")
 	bool DoFullDamage;
 
@@ -51,6 +54,9 @@ private:
 	UFUNCTION()
 	void OnProjectileHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
 	void Explode();
+	void TryDestroy();
 	AController* GetController() const;
 	void IgnoreOwner(bool bShouldIgnore) const;
+	FTimerHandle LifeTimeTimerHandle;
+	FTimerHandle DestroyDelayTimerHandle;
 };
