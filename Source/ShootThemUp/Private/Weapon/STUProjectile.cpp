@@ -66,6 +66,7 @@ void ASTUProjectile::Explode()
 	                                    DoFullDamage);
 
 	//DrawDebugSphere(GetWorld(), GetActorLocation(), DamageRadius, 16, FColor::Red, false, 5.0f);
+	OnExplode();
 	GetWorldTimerManager().SetTimer(DestroyDelayTimerHandle, this, &ASTUProjectile::TryDestroy, DestroyDelay, false);
 }
 

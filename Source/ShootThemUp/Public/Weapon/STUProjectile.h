@@ -45,6 +45,9 @@ protected:
 	UPROPERTY(VisibleAnywhere, Category="VFX")
 	USTUWeaponFXComponent* WeaponFXComponent;
 
+	UFUNCTION(BlueprintImplementableEvent)
+	void OnExplode();
+
 	virtual void BeginPlay() override;
 
 	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
