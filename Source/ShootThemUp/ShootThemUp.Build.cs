@@ -6,7 +6,17 @@ public class ShootThemUp : ModuleRules
 	{
 		PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
 
-		PublicDependencyModuleNames.AddRange(new string[] {"Core", "CoreUObject", "Engine", "InputCore", "Niagara", "PhysicsCore"});
+		PublicDependencyModuleNames.AddRange(new[]
+		{
+			"Core",
+			"CoreUObject",
+			"Engine",
+			"InputCore",
+			"Niagara",
+			"PhysicsCore",
+			"NavigationSystem",
+			"GameplayTasks"
+		});
 
 		PrivateDependencyModuleNames.AddRange(new string[] { });
 
@@ -20,6 +30,7 @@ public class ShootThemUp : ModuleRules
 			"ShootThemUp/Public/Pickups",
 			"ShootThemUp/Public/Dev",
 			"ShootThemUp/Public/AI",
+			"ShootThemUp/Public/AI/Tasks",
 			"ShootThemUp/Public/Weapon/Components"
 		});
 
