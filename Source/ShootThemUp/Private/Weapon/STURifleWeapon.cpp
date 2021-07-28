@@ -23,8 +23,8 @@ void ASTURifleWeapon::BeginPlay()
 void ASTURifleWeapon::StartFire()
 {
 	GetWorldTimerManager().SetTimer(ShotTimerHandle, this, &ASTURifleWeapon::MakeShot, TimePerShot, true);
-	MakeShot();
 	InitMuzzleFX();
+	MakeShot();
 }
 
 void ASTURifleWeapon::StopFire()
@@ -99,11 +99,11 @@ void ASTURifleWeapon::InitMuzzleFX()
 
 void ASTURifleWeapon::SetMuzzleFXVisibility(bool Visible) const
 {
-	if (MuzzleFXComponent)
-	{
-		MuzzleFXComponent->SetPaused(!Visible);
-		MuzzleFXComponent->SetVisibility(Visible);
-	}
+	if (MuzzleFXComponent == nullptr) { return; }
+	UE_LOG(LogTemp, Display, TEXT("SetMuzzleFXVisibility {%i}"), Visible);
+
+	MuzzleFXComponent->SetPaused(!Visible);
+	MuzzleFXComponent->SetVisibility(Visible, true);
 }
 
 void ASTURifleWeapon::DrawTrace(const FVector& TraceStart, const FVector& TraceEnd) const
@@ -114,8 +114,8 @@ void ASTURifleWeapon::DrawTrace(const FVector& TraceStart, const FVector& TraceE
 		TraceFX,
 		TraceStart
 	);
-	
-	if(Trace)
+
+	if (Trace)
 	{
 		Trace->SetVariableVec3(TraceTargetName, TraceEnd);
 	}

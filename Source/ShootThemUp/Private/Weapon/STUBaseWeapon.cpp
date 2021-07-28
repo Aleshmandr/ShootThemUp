@@ -104,7 +104,7 @@ void ASTUBaseWeapon::ChangeClip()
 
 bool ASTUBaseWeapon::CanReload() const
 {
-	return CurrentAmmo.Bullets < DefaultAmmo.Bullets && CurrentAmmo.Clips > 0;
+	return CurrentAmmo.Bullets < DefaultAmmo.Bullets && (CurrentAmmo.Clips > 0 || CurrentAmmo.IsInfinite);
 }
 
 void ASTUBaseWeapon::LogAmmo()

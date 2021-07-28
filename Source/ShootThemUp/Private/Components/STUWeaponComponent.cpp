@@ -186,9 +186,10 @@ void USTUWeaponComponent::OnClipEmpty(ASTUBaseWeapon* Weapon)
 
 void USTUWeaponComponent::ChangeClip()
 {
+	CurrentWeapon->StopFire();
+	
 	if (!CanReload()) { return; }
 
-	CurrentWeapon->StopFire();
 	ReloadAnimInProgress = true;
 	PlayAnimMontage(CurrentWeaponReloadAnimMontage);
 }

@@ -21,7 +21,7 @@ public:
 	void SetDirection(const FVector& Direction) { ShotDirection = Direction; }
 
 protected:
-	UPROPERTY(VisibleDefaultsOnly, Category="Weapon")
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category="Weapon")
 	USphereComponent* CollisionComponent;
 
 	UPROPERTY(VisibleDefaultsOnly, Category="Weapon")

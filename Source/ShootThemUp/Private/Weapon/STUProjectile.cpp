@@ -46,7 +46,7 @@ void ASTUProjectile::EndPlay(const EEndPlayReason::Type EndPlayReason)
 void ASTUProjectile::OnProjectileHit(UPrimitiveComponent* HitComponent, AActor* OtherActor,
                                      UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
 {
-	const auto OtherName = OtherActor == nullptr ? "None" : OtherActor->GetName();
+	CollisionComponent->OnComponentHit.RemoveDynamic(this, &ASTUProjectile::OnProjectileHit);
 	Explode();
 	WeaponFXComponent->PlayImpactFX(Hit);
 }
