@@ -3,6 +3,13 @@
 #include "AI/STUAIController.h"
 
 #include "STUAICharacter.h"
+#include "STUAIPerceptionComponent.h"
+
+ASTUAIController::ASTUAIController()
+{
+	STUAIPerceptionComponent = CreateDefaultSubobject<USTUAIPerceptionComponent>("STUAIPerceptionComponent");
+	SetPerceptionComponent(*STUAIPerceptionComponent);
+}
 
 void ASTUAIController::OnPossess(APawn* InPawn)
 {
