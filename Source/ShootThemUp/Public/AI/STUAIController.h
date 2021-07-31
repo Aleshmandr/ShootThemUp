@@ -22,5 +22,13 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="AI")
 	USTUAIPerceptionComponent* STUAIPerceptionComponent;
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="AI")
+	FName EnemyBlackboardKey = "EnemyActor";
+
 	virtual void OnPossess(APawn* InPawn) override;
+
+	virtual void Tick(float DeltaSeconds) override;
+
+private:
+	AActor* GetEnemyActor();
 };

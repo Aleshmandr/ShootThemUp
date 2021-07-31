@@ -23,8 +23,14 @@ EBTNodeResult::Type USTUFindRandomLocationTaskNode::ExecuteTask(UBehaviorTreeCom
 	if(!Pawn) { return EBTNodeResult::Failed; }
 	FNavLocation ResultLocation;
 	const auto NavigationSystem = UNavigationSystemV1::GetCurrent(Controller);
+
+	const auto SearchCenterActor = Cast<AActor>(Blackboard->GetValueAsObject(SearchCenterActorKey.SelectedKeyName));
+	if(!SearchCenterActor)
+	{
+		return EBTNodeResult::Failed;
+	}
 	
-	if(NavigationSystem && NavigationSystem->GetRandomReachablePointInRadius(Pawn->GetActorLocation(), Radius, ResultLocation))
+	if(NavigationSystem && NavigationSystem->GetRandomReachablePointInRadius(SearchCenterActor->GetActorLocation(), Radius, ResultLocation))
 	{
 		Blackboard->SetValueAsVector(TargetLocationKey.SelectedKeyName, ResultLocation.Location);
 		return EBTNodeResult::Succeeded;
