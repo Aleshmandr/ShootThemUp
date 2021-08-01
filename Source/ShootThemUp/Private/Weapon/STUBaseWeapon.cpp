@@ -36,7 +36,7 @@ bool ASTUBaseWeapon::TryAddAmmo(const int Clips)
 {
 	if (!CurrentAmmo.IsInfinite && CurrentAmmo.Clips < DefaultAmmo.Clips && Clips > 0)
 	{
-		const bool AutoReload = IsAmmoEmpty();
+		const bool AutoReload = CurrentAmmo.IsAmmoEmpty();
 		CurrentAmmo.Clips = FMath::Clamp(CurrentAmmo.Clips + Clips, 0, DefaultAmmo.Clips);
 		if (AutoReload)
 		{
@@ -69,20 +69,10 @@ void ASTUBaseWeapon::DecreaseAmmo()
 		return;
 	}
 	CurrentAmmo.Bullets--;
-	if (!IsAmmoEmpty() && IsClipEmpty())
+	if (!CurrentAmmo.IsAmmoEmpty() && CurrentAmmo.IsClipEmpty())
 	{
 		OnClipEmpty.Broadcast(this);
 	}
-}
-
-bool ASTUBaseWeapon::IsAmmoEmpty() const
-{
-	return !CurrentAmmo.IsInfinite && CurrentAmmo.Clips <= 0 && IsClipEmpty();
-}
-
-bool ASTUBaseWeapon::IsClipEmpty() const
-{
-	return CurrentAmmo.Bullets <= 0;
 }
 
 void ASTUBaseWeapon::ChangeClip()

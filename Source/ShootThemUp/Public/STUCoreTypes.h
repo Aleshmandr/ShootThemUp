@@ -19,6 +19,16 @@ struct FAmmoData
 	int Clips;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Weapon")
 	bool IsInfinite;
+
+	bool IsAmmoEmpty() const
+	{
+		return !IsInfinite && Clips <= 0 && IsClipEmpty();
+	}
+
+	bool IsClipEmpty() const
+	{
+		return Bullets <= 0;
+	}
 };
 
 USTRUCT(BlueprintType)

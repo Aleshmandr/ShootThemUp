@@ -49,13 +49,9 @@ protected:
 	FVector GetMuzzleWorldLocation() const;
 	bool MakeHit(FHitResult& HitResult, const FVector& TraceStart, const FVector& TraceEnd) const;
 	APlayerController* GetPlayerController() const;
-
+	FAmmoData CurrentAmmo;
+	
 	void DecreaseAmmo();
-	bool IsAmmoEmpty() const;
-	bool IsClipEmpty() const;
 	void LogAmmo();
 	UNiagaraComponent* SpawnMuzzleFX() const;
-
-private:
-	FAmmoData CurrentAmmo;
 };

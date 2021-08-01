@@ -21,9 +21,23 @@ void USTUFireService::TickNode(UBehaviorTreeComponent& OwnerComp, uint8* NodeMem
 	const auto WeaponComponent = Controller->GetPawn()->FindComponentByClass<USTUWeaponComponent>();
 	if (WeaponComponent)
 	{
-		CheckAttackTarget(OwnerComp)? WeaponComponent->StartFire() : WeaponComponent->StopFire();
+		if(CheckAttackTarget(OwnerComp))
+		{
+			WeaponComponent->StartFire();
+			FAmmoData AmmoData;
+			if(WeaponComponent->TryGetAmmoData(AmmoData) && AmmoData.IsAmmoEmpty())
+			{
+				WeaponComponent->NextWeapon();
+			}
+			
+		}else
+		{
+			 WeaponComponent->StopFire();
+		}
 	}
 }
+
+
 
 bool USTUFireService::CheckAttackTarget(UBehaviorTreeComponent& OwnerComp) const
 {

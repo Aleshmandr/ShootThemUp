@@ -35,7 +35,7 @@ void ASTURifleWeapon::StopFire()
 
 void ASTURifleWeapon::MakeShot()
 {
-	if (!GetWorld() || IsAmmoEmpty())
+	if (!GetWorld() || CurrentAmmo.IsAmmoEmpty())
 	{
 		StopFire();
 		return;

@@ -11,7 +11,7 @@ void ASTULauncherWeapon::StartFire()
 
 void ASTULauncherWeapon::MakeShot()
 {
-	if (!GetWorld() || IsAmmoEmpty())
+	if (!GetWorld() || CurrentAmmo.IsAmmoEmpty())
 	{
 		StopFire();
 		return;
