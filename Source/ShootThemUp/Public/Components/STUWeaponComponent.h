@@ -16,6 +16,7 @@ public:
 	void StartFire();
 	void StopFire();
 	void NextWeapon();
+	bool TryEquipNonEmptyWeapon();
 	void Reload();
 	bool TryGetWeaponUIData(FWeaponUIData& UIData) const;
 	bool TryGetAmmoData(FAmmoData& AmmoData) const;

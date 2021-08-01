@@ -46,7 +46,7 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category="Animation")
 	UAnimMontage* DeathAnimMontage;
 
-	void OnDeath();
+	virtual void OnDeath();
 
 	void OnHealthChanged(float Health, float Delta) const;
 

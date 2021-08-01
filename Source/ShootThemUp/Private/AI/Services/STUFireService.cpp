@@ -4,7 +4,6 @@
 #include "AI/Services/STUFireService.h"
 
 #include "AIController.h"
-#include "STUUtils.h"
 #include "STUWeaponComponent.h"
 #include "BehaviorTree/BlackboardComponent.h"
 
@@ -21,23 +20,21 @@ void USTUFireService::TickNode(UBehaviorTreeComponent& OwnerComp, uint8* NodeMem
 	const auto WeaponComponent = Controller->GetPawn()->FindComponentByClass<USTUWeaponComponent>();
 	if (WeaponComponent)
 	{
-		if(CheckAttackTarget(OwnerComp))
+		if (CheckAttackTarget(OwnerComp))
 		{
 			WeaponComponent->StartFire();
 			FAmmoData AmmoData;
-			if(WeaponComponent->TryGetAmmoData(AmmoData) && AmmoData.IsAmmoEmpty())
+			if (WeaponComponent->TryGetAmmoData(AmmoData) && AmmoData.IsAmmoEmpty())
 			{
-				WeaponComponent->NextWeapon();
+				WeaponComponent->TryEquipNonEmptyWeapon();
 			}
-			
-		}else
+		}
+		else
 		{
-			 WeaponComponent->StopFire();
+			WeaponComponent->StopFire();
 		}
 	}
 }
-
-
 
 bool USTUFireService::CheckAttackTarget(UBehaviorTreeComponent& OwnerComp) const
 {

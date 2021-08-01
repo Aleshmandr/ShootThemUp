@@ -187,7 +187,7 @@ void USTUWeaponComponent::OnClipEmpty(ASTUBaseWeapon* Weapon)
 void USTUWeaponComponent::ChangeClip()
 {
 	CurrentWeapon->StopFire();
-	
+
 	if (!CanReload()) { return; }
 
 	ReloadAnimInProgress = true;
@@ -218,6 +218,26 @@ void USTUWeaponComponent::NextWeapon()
 		CurrentWeaponIndex = (CurrentWeaponIndex + 1) % Weapons.Num();
 		EquipWeapon(CurrentWeaponIndex);
 	}
+}
+
+bool USTUWeaponComponent::TryEquipNonEmptyWeapon()
+{
+	if (CanEquip())
+	{
+		for (int i = 0; i < Weapons.Num(); ++i)
+		{
+			const auto AmmoData = Weapons[i]->GetAmmoData();
+			if (CurrentWeapon == Weapons[i] || AmmoData.IsAmmoEmpty())
+			{
+				continue;
+			}
+			CurrentWeaponIndex = i;
+			EquipWeapon(CurrentWeaponIndex);
+			return true;
+		}
+	}
+
+	return false;
 }
 
 void USTUWeaponComponent::Reload()
