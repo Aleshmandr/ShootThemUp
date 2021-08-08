@@ -5,7 +5,8 @@
 
 #include "EnvironmentQuery/Items/EnvQueryItemType_ActorBase.h"
 
-USTUActorVisibilityEnvQueryTest::USTUActorVisibilityEnvQueryTest(const FObjectInitializer& ObjectInitializer): Super(ObjectInitializer)
+UEnvQueryTest_ActorIsVisible::UEnvQueryTest_ActorIsVisible(const FObjectInitializer& ObjectInitializer): Super(
+	ObjectInitializer)
 {
 	Cost = EEnvTestCost::Low;
 	SetWorkOnFloatValues(false);
@@ -15,7 +16,7 @@ USTUActorVisibilityEnvQueryTest::USTUActorVisibilityEnvQueryTest(const FObjectIn
 	ValidItemType = UEnvQueryItemType_ActorBase::StaticClass();
 }
 
-void USTUActorVisibilityEnvQueryTest::RunTest(FEnvQueryInstance& QueryInstance) const
+void UEnvQueryTest_ActorIsVisible::RunTest(FEnvQueryInstance& QueryInstance) const
 {
 	UObject* QueryOwner = QueryInstance.Owner.Get();
 	if (QueryOwner == nullptr)
@@ -30,7 +31,7 @@ void USTUActorVisibilityEnvQueryTest::RunTest(FEnvQueryInstance& QueryInstance) 
 	for (FEnvQueryInstance::ItemIterator It(this, QueryInstance); It; ++It)
 	{
 		AActor* ItemActor = GetItemActor(QueryInstance, It.GetIndex());
-		const bool bSatisfiesTest = ItemActor != nullptr && ItemActor->GetRootComponent()->IsVisible();
+		const bool bSatisfiesTest = ItemActor != nullptr && ItemActor->GetRootComponent()->GetVisibleFlag();
 
 		It.SetScore(TestPurpose, FilterType, bSatisfiesTest, bWantsValid);
 	}

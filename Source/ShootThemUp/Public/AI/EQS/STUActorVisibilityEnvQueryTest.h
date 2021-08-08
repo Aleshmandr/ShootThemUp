@@ -10,11 +10,11 @@
  * 
  */
 UCLASS()
-class SHOOTTHEMUP_API USTUActorVisibilityEnvQueryTest : public UEnvQueryTest
+class SHOOTTHEMUP_API UEnvQueryTest_ActorIsVisible : public UEnvQueryTest
 {
 	GENERATED_BODY()
 
-	USTUActorVisibilityEnvQueryTest(const FObjectInitializer& ObjectInitializer);
+	UEnvQueryTest_ActorIsVisible(const FObjectInitializer& ObjectInitializer);
 
 	virtual void RunTest(FEnvQueryInstance& QueryInstance) const override;
 };
