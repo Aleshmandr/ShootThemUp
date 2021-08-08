@@ -3,6 +3,8 @@
 #pragma once
 
 #include "CoreMinimal.h"
+
+#include "STUBaseWeapon.h"
 #include "BehaviorTree/BTDecorator.h"
 #include "STUNeedAmmoDecorator.generated.h"
 
@@ -18,5 +20,8 @@ public:
 	USTUNeedAmmoDecorator();
 
 protected:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="AI")
+	TSubclassOf<ASTUBaseWeapon> WeaponType;
+
 	virtual bool CalculateRawConditionValue(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory) const override;
 };

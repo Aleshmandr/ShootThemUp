@@ -20,7 +20,7 @@ bool USTUNeedHealthDecorator::CalculateRawConditionValue(UBehaviorTreeComponent&
 	if (Pawn == nullptr) return false;
 
 	const auto HealthComponent = Pawn->FindComponentByClass<USTUHealthComponent>();
-	if (HealthComponent == nullptr) return false;
-	
+
+	if (HealthComponent == nullptr || HealthComponent->IsDead()) return false;
 	return HealthComponent->GetNormalizedHealth() <= NormalizedHealthThresh;
 }

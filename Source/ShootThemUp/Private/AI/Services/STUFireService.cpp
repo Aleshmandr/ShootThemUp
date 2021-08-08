@@ -24,7 +24,7 @@ void USTUFireService::TickNode(UBehaviorTreeComponent& OwnerComp, uint8* NodeMem
 		{
 			WeaponComponent->StartFire();
 			FAmmoData AmmoData;
-			if (WeaponComponent->TryGetAmmoData(AmmoData) && AmmoData.IsAmmoEmpty())
+			if (WeaponComponent->TryGetCurrentAmmoData(AmmoData) && AmmoData.IsAmmoEmpty())
 			{
 				WeaponComponent->TryEquipNonEmptyWeapon();
 			}

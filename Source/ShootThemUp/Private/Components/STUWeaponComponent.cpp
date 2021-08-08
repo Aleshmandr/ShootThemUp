@@ -245,7 +245,7 @@ void USTUWeaponComponent::Reload()
 	ChangeClip();
 }
 
-bool USTUWeaponComponent::TryGetWeaponUIData(FWeaponUIData& UIData) const
+bool USTUWeaponComponent::TryGetCurrentWeaponUIData(FWeaponUIData& UIData) const
 {
 	if (CurrentWeapon)
 	{
@@ -255,12 +255,25 @@ bool USTUWeaponComponent::TryGetWeaponUIData(FWeaponUIData& UIData) const
 	return false;
 }
 
-bool USTUWeaponComponent::TryGetAmmoData(FAmmoData& AmmoData) const
+bool USTUWeaponComponent::TryGetCurrentAmmoData(FAmmoData& AmmoData) const
 {
 	if (CurrentWeapon)
 	{
 		AmmoData = CurrentWeapon->GetAmmoData();
 		return true;
+	}
+	return false;
+}
+
+bool USTUWeaponComponent::TryGetAmmoData(const TSubclassOf<ASTUBaseWeapon> WeaponType, FAmmoData& AmmoData) const
+{
+	for (auto Weapon : Weapons)
+	{
+		if (Weapon->IsA(WeaponType))
+		{
+			AmmoData = Weapon->GetAmmoData();
+			return true;
+		}
 	}
 	return false;
 }

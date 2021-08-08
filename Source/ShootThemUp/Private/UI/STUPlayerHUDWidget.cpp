@@ -39,7 +39,7 @@ bool USTUPlayerHUDWidget::GetAmmoData(FAmmoData& AmmoData) const
 	const auto WeaponComponent = STUUtils::GetSTUPlayerComponent<USTUWeaponComponent>(GetOwningPlayerPawn());
 	if (WeaponComponent == nullptr) { return false; }
 
-	return WeaponComponent->TryGetAmmoData(AmmoData);
+	return WeaponComponent->TryGetCurrentAmmoData(AmmoData);
 }
 
 bool USTUPlayerHUDWidget::TryGetWeaponUIData(FWeaponUIData& UIData) const
@@ -47,7 +47,7 @@ bool USTUPlayerHUDWidget::TryGetWeaponUIData(FWeaponUIData& UIData) const
 	const auto WeaponComponent = STUUtils::GetSTUPlayerComponent<USTUWeaponComponent>(GetOwningPlayerPawn());
 	if (WeaponComponent == nullptr) { return false; }
 
-	return WeaponComponent->TryGetWeaponUIData(UIData);
+	return WeaponComponent->TryGetCurrentWeaponUIData(UIData);
 }
 
 bool USTUPlayerHUDWidget::IsPlayerAlive() const

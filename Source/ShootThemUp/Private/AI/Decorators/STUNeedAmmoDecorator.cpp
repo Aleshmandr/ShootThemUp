@@ -3,6 +3,7 @@
 
 #include "AI/Decorators/STUNeedAmmoDecorator.h"
 
+#include "AIController.h"
 #include "STUWeaponComponent.h"
 
 USTUNeedAmmoDecorator::USTUNeedAmmoDecorator()
@@ -21,5 +22,6 @@ bool USTUNeedAmmoDecorator::CalculateRawConditionValue(UBehaviorTreeComponent& O
 	const auto WeaponComponent = Pawn->FindComponentByClass<USTUWeaponComponent>();
 	if (WeaponComponent == nullptr) return false;
 
-	return false;
+	FAmmoData AmmoData;
+	return WeaponComponent->TryGetAmmoData(WeaponType, AmmoData) && AmmoData.IsAmmoEmpty();
 }

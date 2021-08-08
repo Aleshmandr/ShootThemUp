@@ -18,8 +18,9 @@ public:
 	void NextWeapon();
 	bool TryEquipNonEmptyWeapon();
 	void Reload();
-	bool TryGetWeaponUIData(FWeaponUIData& UIData) const;
-	bool TryGetAmmoData(FAmmoData& AmmoData) const;
+	bool TryGetCurrentWeaponUIData(FWeaponUIData& UIData) const;
+	bool TryGetCurrentAmmoData(FAmmoData& AmmoData) const;
+	bool TryGetAmmoData(TSubclassOf<ASTUBaseWeapon> WeaponType, FAmmoData& AmmoData) const;
 	bool TryAddAmmo(const TSubclassOf<ASTUBaseWeapon> WeaponType, const int Clips);
 
 protected:
