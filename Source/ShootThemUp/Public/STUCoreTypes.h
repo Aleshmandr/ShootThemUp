@@ -81,6 +81,13 @@ USTRUCT(BlueprintType)
 struct FGameData
 {
 	GENERATED_BODY()
+	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Game", meta = (ClampMin = "1", ClampMax = "128"))
 	int32 PlayersNum;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Game", meta = (ClampMin = "1", ClampMax = "10"))
+	int32 RoundsNum;
+	
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Game", meta = (ClampMin = "60", ClampMax = "600"))
+	int32 RoundTime;
 };

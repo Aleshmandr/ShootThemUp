@@ -8,6 +8,8 @@
 #include "UI/STUGameHUD.h"
 #include "STUPlayerController.h"
 
+DEFINE_LOG_CATEGORY_STATIC(LogSTUGameModeBase, All, All)
+
 ASTUGameModeBase::ASTUGameModeBase()
 {
 	DefaultPawnClass = ASTUBaseCharacter::StaticClass();
@@ -19,6 +21,8 @@ void ASTUGameModeBase::StartPlay()
 {
 	Super::StartPlay();
 	SpawnBots();
+	CurrentRound = 0;
+	StartRound();
 }
 
 UClass* ASTUGameModeBase::GetDefaultPawnClassForController_Implementation(AController* InController)
@@ -38,5 +42,29 @@ void ASTUGameModeBase::SpawnBots()
 	{
 		const auto AIController = GetWorld()->SpawnActor<AAIController>(AIControllerClass);
 		RestartPlayer(AIController);
+	}
+}
+
+void ASTUGameModeBase::StartRound()
+{
+	CurrentRound ++;
+	CurrentRoundTimeRemain = GameData.RoundTime;
+	GetWorldTimerManager().SetTimer(RoundTimerHandle, this, &ASTUGameModeBase::UpdateTimer, 1, true);
+	UE_LOG(LogSTUGameModeBase, All, TEXT("Round %i started"), CurrentRound);
+}
+
+void ASTUGameModeBase::UpdateTimer()
+{
+	if (--CurrentRoundTimeRemain <= 0)
+	{
+		GetWorldTimerManager().ClearTimer(RoundTimerHandle);
+		if (CurrentRound >= GameData.RoundsNum)
+		{
+			UE_LOG(LogSTUGameModeBase, All, TEXT("End game"));
+		}
+		else
+		{
+			StartRound();
+		}
 	}
 }

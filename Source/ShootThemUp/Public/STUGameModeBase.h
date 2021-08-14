@@ -21,9 +21,9 @@ class SHOOTTHEMUP_API ASTUGameModeBase : public AGameModeBase
 public:
 	ASTUGameModeBase();
 
-	virtual  void StartPlay() override;
+	virtual void StartPlay() override;
 	virtual UClass* GetDefaultPawnClassForController_Implementation(AController* InController) override;
-	
+
 protected:
 	UPROPERTY(EditDefaultsOnly, Category="Game")
 	TSubclassOf<AAIController> AIControllerClass;
@@ -34,5 +34,12 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category="Game")
 	FGameData GameData;
 
+private:
+	int32 CurrentRound;
+	int32 CurrentRoundTimeRemain;
+	FTimerHandle RoundTimerHandle;
+
 	void SpawnBots();
+	void StartRound();
+	void UpdateTimer();
 };
