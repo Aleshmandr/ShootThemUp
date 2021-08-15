@@ -28,5 +28,6 @@ public:
 
 private:
 	virtual bool Initialize() override;
+	void HandleRoundStart(int Round);
 	void HandleHealthChange(float Health, float Delta);
 };

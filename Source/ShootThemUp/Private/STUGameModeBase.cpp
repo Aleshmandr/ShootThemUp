@@ -34,14 +34,13 @@ UClass* ASTUGameModeBase::GetDefaultPawnClassForController_Implementation(AContr
 	return Super::GetDefaultPawnClassForController_Implementation(InController);
 }
 
-void ASTUGameModeBase::SpawnBots()
+void ASTUGameModeBase::SpawnBots() const
 {
 	if (!GetWorld()) return;
 
 	for (int32 i = 0; i < GameData.PlayersNum - 1; ++i)
 	{
-		const auto AIController = GetWorld()->SpawnActor<AAIController>(AIControllerClass);
-		RestartPlayer(AIController);
+		GetWorld()->SpawnActor<AAIController>(AIControllerClass);
 	}
 }
 
@@ -50,7 +49,9 @@ void ASTUGameModeBase::StartRound()
 	CurrentRound ++;
 	CurrentRoundTimeRemain = GameData.RoundTime;
 	GetWorldTimerManager().SetTimer(RoundTimerHandle, this, &ASTUGameModeBase::UpdateTimer, 1, true);
+	ResetPlayers();
 	UE_LOG(LogSTUGameModeBase, All, TEXT("Round %i started"), CurrentRound);
+	OnRoundStarted.Broadcast(CurrentRound);
 }
 
 void ASTUGameModeBase::UpdateTimer()
@@ -66,5 +67,25 @@ void ASTUGameModeBase::UpdateTimer()
 		{
 			StartRound();
 		}
+	}
+}
+
+void ASTUGameModeBase::ResetPlayer(AController* Controller)
+{
+	if(Controller && Controller->GetPawn())
+	{
+		Controller->GetPawn()->Reset();
+	}
+	
+	RestartPlayer(Controller);
+}
+
+void ASTUGameModeBase::ResetPlayers()
+{
+	if (!GetWorld()) return;
+
+	for (auto Iterator = GetWorld()->GetControllerIterator(); Iterator; ++Iterator)
+	{
+		ResetPlayer(Iterator->Get());
 	}
 }

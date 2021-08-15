@@ -3,6 +3,7 @@
 
 #include "UI/STUPlayerHUDWidget.h"
 
+#include "STUGameModeBase.h"
 #include "STUHealthComponent.h"
 #include "STUUtils.h"
 #include "STUWeaponComponent.h"
@@ -10,12 +11,24 @@
 
 bool USTUPlayerHUDWidget::Initialize()
 {
+	if (GetWorld())
+	{
+		const auto STUGameMode = Cast<ASTUGameModeBase>(GetWorld()->GetAuthGameMode());
+		if (STUGameMode)
+		{
+			STUGameMode->OnRoundStarted.AddUObject(this, &USTUPlayerHUDWidget::HandleRoundStart);
+		}
+	}
+	return Super::Initialize();
+}
+
+void USTUPlayerHUDWidget::HandleRoundStart(int Round)
+{
 	const auto HealthComponent = STUUtils::GetSTUPlayerComponent<USTUHealthComponent>(GetOwningPlayerPawn());
 	if (HealthComponent)
 	{
 		HealthComponent->OnHealthChanged.AddUObject(this, &USTUPlayerHUDWidget::HandleHealthChange);
 	}
-	return Super::Initialize();
 }
 
 void USTUPlayerHUDWidget::HandleHealthChange(float Health, float Delta)

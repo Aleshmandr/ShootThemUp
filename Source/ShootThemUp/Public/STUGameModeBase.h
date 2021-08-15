@@ -20,7 +20,7 @@ class SHOOTTHEMUP_API ASTUGameModeBase : public AGameModeBase
 
 public:
 	ASTUGameModeBase();
-
+	FOnRoundStarted OnRoundStarted;
 	virtual void StartPlay() override;
 	virtual UClass* GetDefaultPawnClassForController_Implementation(AController* InController) override;
 
@@ -39,7 +39,9 @@ private:
 	int32 CurrentRoundTimeRemain;
 	FTimerHandle RoundTimerHandle;
 
-	void SpawnBots();
+	void SpawnBots() const;
 	void StartRound();
 	void UpdateTimer();
+	void ResetPlayer(AController* Controller);
+	void ResetPlayers();
 };
