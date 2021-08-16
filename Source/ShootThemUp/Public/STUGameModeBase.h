@@ -44,4 +44,8 @@ private:
 	void UpdateTimer();
 	void ResetPlayer(AController* Controller);
 	void ResetPlayers();
+
+	void CreateTeamsInfo();
+	FLinearColor GetTeamColor(int32 TeamId);
+	void SetPlayerColor(AController* Controller);
 };

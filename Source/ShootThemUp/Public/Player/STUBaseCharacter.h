@@ -46,6 +46,10 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category="Animation")
 	UAnimMontage* DeathAnimMontage;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category="Components")
+	FName MaterialColorName = "Paint Color";
+
+
 	virtual void OnDeath();
 
 	void OnHealthChanged(float Health, float Delta) const;
@@ -59,6 +63,7 @@ public:
 
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+	void SetPlayerColor(const FLinearColor& Color) const;
 
 private:
 	FTimerHandle RagdollTimerHandle;

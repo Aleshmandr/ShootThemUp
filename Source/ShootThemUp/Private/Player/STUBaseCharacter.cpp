@@ -64,8 +64,17 @@ void ASTUBaseCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 	PlayerInputComponent->BindAction("Shift", EInputEvent::IE_Released, this, &ASTUBaseCharacter::StopShift);
 	PlayerInputComponent->BindAction("Fire", EInputEvent::IE_Pressed, WeaponComponent, &USTUWeaponComponent::StartFire);
 	PlayerInputComponent->BindAction("Fire", EInputEvent::IE_Released, WeaponComponent, &USTUWeaponComponent::StopFire);
-	PlayerInputComponent->BindAction("NextWeapon", EInputEvent::IE_Pressed, WeaponComponent, &USTUWeaponComponent::NextWeapon);
+	PlayerInputComponent->BindAction("NextWeapon", EInputEvent::IE_Pressed, WeaponComponent,
+	                                 &USTUWeaponComponent::NextWeapon);
 	PlayerInputComponent->BindAction("Reload", EInputEvent::IE_Pressed, WeaponComponent, &USTUWeaponComponent::Reload);
+}
+
+void ASTUBaseCharacter::SetPlayerColor(const FLinearColor& Color) const
+{
+	const auto MaterialInstance = GetMesh()->CreateAndSetMaterialInstanceDynamic(0);
+	if (MaterialInstance == nullptr) return;
+	
+	MaterialInstance->SetVectorParameterValue(MaterialColorName, Color);
 }
 
 void ASTUBaseCharacter::MoveForward(float Axis)
@@ -109,13 +118,12 @@ void ASTUBaseCharacter::OnDeath()
 	PlayAnimMontage(DeathAnimMontage);
 	GetCharacterMovement()->DisableMovement();
 	SetLifeSpan(10);
-	
+
 	Controller->ChangeState(NAME_Spectating);
 	GetCapsuleComponent()->SetCollisionResponseToAllChannels(ECR_Ignore);
 	WeaponComponent->StopFire();
 	GetMesh()->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
 	GetWorldTimerManager().SetTimer(RagdollTimerHandle, this, &ASTUBaseCharacter::ActivateRagdoll, 0.3f, false);
-	
 }
 
 void ASTUBaseCharacter::ActivateRagdoll()
