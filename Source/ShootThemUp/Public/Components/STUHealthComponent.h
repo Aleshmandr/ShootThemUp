@@ -53,7 +53,6 @@ protected:
 
 	virtual void BeginPlay() override;
 
-
 private:
 	UPROPERTY()
 	ACharacter* OwnerCharacter;

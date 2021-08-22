@@ -12,7 +12,7 @@ public:
 		return Cast<T>(Component);
 	}
 
-	static ASTUPlayerState* GetPlayerData(AActor* Actor)
+	static ASTUPlayerState* GetPlayerState(const AActor* Actor)
 	{
 		if (Actor == nullptr) return nullptr;
 

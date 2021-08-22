@@ -5,9 +5,11 @@
 
 #include "AIController.h"
 #include "STUBaseCharacter.h"
+#include "STUHealthComponent.h"
 #include "UI/STUGameHUD.h"
 #include "STUPlayerController.h"
 #include "STUPlayerState.h"
+#include "STUUtils.h"
 
 DEFINE_LOG_CATEGORY_STATIC(LogSTUGameModeBase, All, All)
 
@@ -61,6 +63,7 @@ void ASTUGameModeBase::UpdateTimer()
 {
 	if (--CurrentRoundTimeRemain <= 0)
 	{
+		LogPlayers();
 		GetWorldTimerManager().ClearTimer(RoundTimerHandle);
 		if (CurrentRound >= GameData.RoundsNum)
 		{
@@ -92,6 +95,17 @@ void ASTUGameModeBase::ResetPlayer(AController* Controller)
 
 	RestartPlayer(Controller);
 	SetPlayerColor(Controller);
+	TrackPlayer(Controller);
+}
+
+void ASTUGameModeBase::TrackPlayer(AController* Controller) const
+{
+	if (Controller == nullptr) return;
+
+	const auto HealthComponent = STUUtils::GetSTUPlayerComponent<USTUHealthComponent>(Controller->GetPawn());
+	if (HealthComponent == nullptr) return;
+
+	HealthComponent->OnDeath.AddUObject(this, &ASTUGameModeBase::HandlePlayerDeath);
 }
 
 void ASTUGameModeBase::CreateTeamsInfo()
@@ -104,7 +118,7 @@ void ASTUGameModeBase::CreateTeamsInfo()
 		const auto Controller = Iterator->Get();
 		if (Controller == nullptr) continue;
 
-		auto PlayerState = Cast<ASTUPlayerState>(Controller->PlayerState);
+		const auto PlayerState = Cast<ASTUPlayerState>(Controller->PlayerState);
 		if (PlayerState == nullptr) continue;
 
 		TeamId = (++TeamId) % GameData.TeamsCount;
@@ -123,15 +137,54 @@ FLinearColor ASTUGameModeBase::GetTeamColor(int32 TeamId)
 	return GameData.DefaultTeamColor;
 }
 
-void ASTUGameModeBase::SetPlayerColor(AController* Controller)
+void ASTUGameModeBase::SetPlayerColor(AController* Controller) const
 {
-	if(Controller == nullptr) return;
+	if (Controller == nullptr) return;
 
 	const auto PlayerState = Cast<ASTUPlayerState>(Controller->PlayerState);
-	if(PlayerState == nullptr) return;
+	if (PlayerState == nullptr) return;
 
-	auto Character = Cast<ASTUBaseCharacter>(Controller->GetPawn());
-	if(Character == nullptr) return;
+	const auto Character = Cast<ASTUBaseCharacter>(Controller->GetPawn());
+	if (Character == nullptr) return;
 
 	Character->SetPlayerColor(PlayerState->GetTeamColor());
+}
+
+void ASTUGameModeBase::LogPlayers() const
+{
+	if (!GetWorld()) return;
+
+	for (auto Iterator = GetWorld()->GetControllerIterator(); Iterator; ++Iterator)
+	{
+		const auto Controller = Iterator->Get();
+		if (Controller == nullptr) continue;
+
+		const auto PlayerState = Cast<ASTUPlayerState>(Controller->PlayerState);
+		if (PlayerState == nullptr) continue;
+
+		PlayerState->LogPlayerState();
+	}
+}
+
+void ASTUGameModeBase::HandlePlayerDeath(const FDeathData& DeathData) const
+{
+	if (!GetWorld()) return;
+
+	if (DeathData.InstigatedBy != nullptr)
+	{
+		const auto KillerState = STUUtils::GetPlayerState(DeathData.InstigatedBy->GetPawn());
+		if (KillerState != nullptr)
+		{
+			KillerState->AddKill();
+		}
+	}
+
+	if (DeathData.KilledActor != nullptr)
+	{
+		const auto VictimState = STUUtils::GetPlayerState(DeathData.KilledActor);
+		if (VictimState != nullptr)
+		{
+			VictimState->AddDeath();
+		}
+	}
 }

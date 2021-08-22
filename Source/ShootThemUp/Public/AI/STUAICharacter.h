@@ -20,5 +20,5 @@ public:
 	UBehaviorTree* BehaviourTree;
 
 protected:
-	virtual void OnDeath() override;
+	virtual void OnDeath(const FDeathData& DeathData) override;
 };

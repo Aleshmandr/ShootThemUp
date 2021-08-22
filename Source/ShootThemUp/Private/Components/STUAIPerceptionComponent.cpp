@@ -23,7 +23,7 @@ AActor* USTUAIPerceptionComponent::GetClosestEnemy() const
 	if (Controller == nullptr) return nullptr;
 	const auto Pawn = Controller->GetPawn();
 	if (Pawn == nullptr) return nullptr;
-	const auto PlayerData = STUUtils::GetPlayerData(Pawn);
+	const auto PlayerData = STUUtils::GetPlayerState(Pawn);
 
 	float MinSqrDistance = MAX_FLT;
 	AActor* NearestEnemy = nullptr;
@@ -35,7 +35,7 @@ AActor* USTUAIPerceptionComponent::GetClosestEnemy() const
 			continue;
 		}
 
-		const auto PerceivedPlayerData = STUUtils::GetPlayerData(PerceivedActors[i]);
+		const auto PerceivedPlayerData = STUUtils::GetPlayerState(PerceivedActors[i]);
 		if (PerceivedPlayerData != nullptr && PlayerData != nullptr
 			&& PerceivedPlayerData->GetTeamId() == PlayerData->GetTeamId())
 		{

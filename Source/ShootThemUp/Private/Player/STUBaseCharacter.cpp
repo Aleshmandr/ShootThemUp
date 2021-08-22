@@ -112,7 +112,7 @@ void ASTUBaseCharacter::StopShift()
 	}
 }
 
-void ASTUBaseCharacter::OnDeath()
+void ASTUBaseCharacter::OnDeath(const FDeathData& DeathData)
 {
 	UE_LOG(LogCharacter, Log, TEXT("Player %s is dead"), *GetName());
 	PlayAnimMontage(DeathAnimMontage);

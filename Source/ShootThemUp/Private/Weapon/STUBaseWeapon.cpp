@@ -51,14 +51,10 @@ void ASTUBaseWeapon::MakeShot()
 {
 }
 
-APlayerController* ASTUBaseWeapon::GetPlayerController() const
+AController* ASTUBaseWeapon::GetController() const
 {
-	const auto Character = Cast<ACharacter>(GetOwner());
-	if (!Character)
-	{
-		return nullptr;
-	}
-	return Character->GetController<APlayerController>();
+	const auto Pawn = Cast<APawn>(GetOwner());
+	return Pawn ? Pawn->GetController() : nullptr;
 }
 
 void ASTUBaseWeapon::DecreaseAmmo()
@@ -125,10 +121,10 @@ bool ASTUBaseWeapon::GetPlayerViewPoint(FVector& ViewLocation, FRotator& ViewRot
 	{
 		return false;
 	}
-	
-	if(Character->IsPlayerControlled())
+
+	if (Character->IsPlayerControlled())
 	{
-		APlayerController* Controller = GetPlayerController();
+		const auto Controller = Cast<APlayerController>(Character->GetController());
 		if (!Controller)
 		{
 			return false;
@@ -136,7 +132,7 @@ bool ASTUBaseWeapon::GetPlayerViewPoint(FVector& ViewLocation, FRotator& ViewRot
 		Controller->GetPlayerViewPoint(ViewLocation, ViewRotation);
 		return true;
 	}
-	
+
 	ViewLocation = WeaponMesh->GetSocketLocation(MuzzleSocketName);
 	ViewRotation = WeaponMesh->GetSocketRotation(MuzzleSocketName);
 	return true;

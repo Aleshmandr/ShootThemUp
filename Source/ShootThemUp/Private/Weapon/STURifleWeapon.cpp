@@ -85,7 +85,7 @@ void ASTURifleWeapon::MakeDamage(const FHitResult& HitResult)
 	{
 		return;
 	}
-	HitActor->TakeDamage(Damage, FDamageEvent(), GetPlayerController(), this);
+	HitActor->TakeDamage(Damage, FDamageEvent(), GetController(), this);
 }
 
 void ASTURifleWeapon::InitMuzzleFX()

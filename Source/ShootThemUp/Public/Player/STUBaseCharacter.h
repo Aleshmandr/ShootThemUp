@@ -50,7 +50,7 @@ protected:
 	FName MaterialColorName = "Paint Color";
 
 
-	virtual void OnDeath();
+	virtual void OnDeath(const FDeathData& DeathData);
 
 	void OnHealthChanged(float Health, float Delta) const;
 

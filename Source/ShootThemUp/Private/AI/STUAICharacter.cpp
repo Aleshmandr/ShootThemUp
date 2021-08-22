@@ -6,9 +6,9 @@
 #include "BrainComponent.h"
 #include "STUAIController.h"
 
-void ASTUAICharacter::OnDeath()
+void ASTUAICharacter::OnDeath(const FDeathData& DeathData)
 {
-	Super::OnDeath();
+	Super::OnDeath(DeathData);
 	const auto AIController = Cast<ASTUAIController>(GetController());
 
 	if (AIController && AIController->BrainComponent)

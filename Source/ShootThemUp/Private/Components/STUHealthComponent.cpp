@@ -71,12 +71,17 @@ void USTUHealthComponent::HandleTakeAnyDamage(AActor* DamagedActor, float Damage
 	}
 	if (IsDead())
 	{
-		OnDeath.Broadcast();
+		FDeathData DeathData;
+		DeathData.KilledActor = DamagedActor;
+		DeathData.DamageType = DamageType;
+		DeathData.InstigatedBy = InstigatedBy;
+		DeathData.DamageCauser = DamageCauser;
+		OnDeath.Broadcast(DeathData);
 	}
 	PlayCameraShake();
 }
 
-bool USTUHealthComponent::TryHeal(float HealAmount)
+bool USTUHealthComponent::TryHeal(const float HealAmount)
 {
 	if (!IsDead() &&  Health < MaxHealth)
 	{

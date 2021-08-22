@@ -48,7 +48,7 @@ protected:
 	bool GetPlayerViewPoint(FVector& ViewLocation, FRotator& ViewRotation) const;
 	FVector GetMuzzleWorldLocation() const;
 	bool MakeHit(FHitResult& HitResult, const FVector& TraceStart, const FVector& TraceEnd) const;
-	APlayerController* GetPlayerController() const;
+	AController* GetController() const;
 	FAmmoData CurrentAmmo;
 	
 	void DecreaseAmmo();

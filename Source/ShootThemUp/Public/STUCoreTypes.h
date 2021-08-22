@@ -4,11 +4,6 @@
 class UNiagaraSystem;
 class ASTUBaseWeapon;
 
-DECLARE_MULTICAST_DELEGATE_OneParam(FOnClipEmptySignature, ASTUBaseWeapon*);
-DECLARE_MULTICAST_DELEGATE(FOnDeathSignature);
-DECLARE_MULTICAST_DELEGATE_TwoParams(FOnHealthChangedSignature, float, float);
-DECLARE_MULTICAST_DELEGATE_OneParam(FOnNotifiedSignature, USkeletalMeshComponent*);
-DECLARE_MULTICAST_DELEGATE_OneParam(FOnRoundStarted, int);
 
 USTRUCT(BlueprintType)
 struct FAmmoData
@@ -79,6 +74,22 @@ struct FImpactFXData
 };
 
 USTRUCT(BlueprintType)
+struct FDeathData
+{
+	GENERATED_BODY()
+	
+public:
+	UPROPERTY()
+	const AActor* KilledActor;
+	UPROPERTY()
+	const UDamageType* DamageType;
+	UPROPERTY()
+	const AController* InstigatedBy;
+	UPROPERTY()
+	const AActor* DamageCauser;
+};
+
+USTRUCT(BlueprintType)
 struct FGameData
 {
 	GENERATED_BODY()
@@ -96,8 +107,14 @@ struct FGameData
 	int32 TeamsCount;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
-	FColor DefaultTeamColor = FColor::Red;
+	FLinearColor DefaultTeamColor = FLinearColor::Red;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
-	TArray<FColor> TeamColors;
+	TArray<FLinearColor> TeamColors;
 };
+
+DECLARE_MULTICAST_DELEGATE_OneParam(FOnClipEmptySignature, ASTUBaseWeapon*);
+DECLARE_MULTICAST_DELEGATE_OneParam(FOnDeathSignature, const FDeathData&);
+DECLARE_MULTICAST_DELEGATE_TwoParams(FOnHealthChangedSignature, float, float);
+DECLARE_MULTICAST_DELEGATE_OneParam(FOnNotifiedSignature, USkeletalMeshComponent*);
+DECLARE_MULTICAST_DELEGATE_OneParam(FOnRoundStarted, int);
