@@ -10,9 +10,7 @@
 #include "STUGameModeBase.generated.h"
 
 class AAIController;
-/**
- * 
- */
+
 UCLASS()
 class SHOOTTHEMUP_API ASTUGameModeBase : public AGameModeBase
 {
@@ -23,6 +21,9 @@ public:
 	FOnRoundStarted OnRoundStarted;
 	virtual void StartPlay() override;
 	virtual UClass* GetDefaultPawnClassForController_Implementation(AController* InController) override;
+	int32 GetCurrentRound() const { return CurrentRound; }
+	int32 GetRoundsCount() const { return GameData.RoundsNum; }
+	int32 GetCurrentRoundTimeRemain() const { return CurrentRoundTimeRemain; }
 
 protected:
 	UPROPERTY(EditDefaultsOnly, Category="Game")
