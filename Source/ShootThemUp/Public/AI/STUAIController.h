@@ -4,12 +4,11 @@
 
 #include "CoreMinimal.h"
 #include "AIController.h"
+#include "STUCharacterRespawnComponent.h"
 #include "STUAIController.generated.h"
 
 class USTUAIPerceptionComponent;
-/**
- * 
- */
+
 UCLASS()
 class SHOOTTHEMUP_API ASTUAIController : public AAIController
 {
@@ -21,6 +20,9 @@ public:
 protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="AI")
 	USTUAIPerceptionComponent* STUAIPerceptionComponent;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Game")
+	USTUCharacterRespawnComponent* RespawnComponent;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="AI")
 	FName EnemyBlackboardKey = "EnemyActor";

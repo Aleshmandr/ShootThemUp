@@ -71,7 +71,9 @@ void USTUHealthComponent::HandleTakeAnyDamage(AActor* DamagedActor, float Damage
 	}
 	if (IsDead())
 	{
+		const auto Pawn = Cast<APawn>(GetOwner());
 		FDeathData DeathData;
+		DeathData.KilledController = Pawn == nullptr ? nullptr : Pawn->GetController();
 		DeathData.KilledActor = DamagedActor;
 		DeathData.DamageType = DamageType;
 		DeathData.InstigatedBy = InstigatedBy;

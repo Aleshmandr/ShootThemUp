@@ -80,6 +80,8 @@ struct FDeathData
 	
 public:
 	UPROPERTY()
+	const AController* KilledController;
+	UPROPERTY()
 	const AActor* KilledActor;
 	UPROPERTY()
 	const UDamageType* DamageType;
@@ -102,6 +104,12 @@ struct FGameData
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Game", meta = (ClampMin = "1", ClampMax = "600"))
 	int32 RoundTime;
+	
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Game", meta = (ClampMin = "1", ClampMax = "30"))
+	int32 RespawnTime;
+	
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Game", meta = (ClampMin = "1", ClampMax = "30"))
+	int32 RoundEndRespawnThresh;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Game", meta = (ClampMin = "1", ClampMax = "128"))
 	int32 TeamsCount;

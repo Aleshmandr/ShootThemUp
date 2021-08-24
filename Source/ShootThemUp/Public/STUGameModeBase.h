@@ -24,6 +24,7 @@ public:
 	int32 GetCurrentRound() const { return CurrentRound; }
 	int32 GetRoundsCount() const { return GameData.RoundsNum; }
 	int32 GetCurrentRoundTimeRemain() const { return CurrentRoundTimeRemain; }
+	void RequestRespawn(AController* Controller);
 
 protected:
 	UPROPERTY(EditDefaultsOnly, Category="Game")
@@ -45,6 +46,7 @@ private:
 	void UpdateTimer();
 	void ResetPlayer(AController* Controller);
 	void ResetPlayers();
+	void RespawnPlayer(const AController* Controller) const;
 
 	void CreateTeamsInfo();
 	FLinearColor GetTeamColor(int32 TeamId);

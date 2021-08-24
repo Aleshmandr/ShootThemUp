@@ -6,9 +6,17 @@
 #include "GameFramework/PlayerController.h"
 #include "STUPlayerController.generated.h"
 
+class USTUCharacterRespawnComponent;
+
 UCLASS()
 class SHOOTTHEMUP_API ASTUPlayerController : public APlayerController
 {
 	GENERATED_BODY()
-	
+
+public:
+	ASTUPlayerController();
+
+protected:
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Game")
+	USTUCharacterRespawnComponent* RespawnComponent;
 };

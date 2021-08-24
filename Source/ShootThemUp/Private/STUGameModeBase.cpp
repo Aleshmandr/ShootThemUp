@@ -5,6 +5,7 @@
 
 #include "AIController.h"
 #include "STUBaseCharacter.h"
+#include "STUCharacterRespawnComponent.h"
 #include "STUHealthComponent.h"
 #include "UI/STUGameHUD.h"
 #include "STUPlayerController.h"
@@ -86,6 +87,25 @@ void ASTUGameModeBase::ResetPlayers()
 	}
 }
 
+void ASTUGameModeBase::RequestRespawn(AController* Controller)
+{
+	ResetPlayer(Controller);
+}
+
+void ASTUGameModeBase::RespawnPlayer(const AController* Controller) const
+{
+	if (!Controller) { return; }
+
+	//TODO: Respawn thresh
+	if (CurrentRoundTimeRemain <= GameData.RespawnTime) { return; }
+
+	const auto RespawnComponent = Controller->FindComponentByClass<USTUCharacterRespawnComponent>();
+
+	if (!RespawnComponent) { return; }
+
+	RespawnComponent->Respawn(GameData.RespawnTime);
+}
+
 void ASTUGameModeBase::ResetPlayer(AController* Controller)
 {
 	if (Controller && Controller->GetPawn())
@@ -100,10 +120,10 @@ void ASTUGameModeBase::ResetPlayer(AController* Controller)
 
 void ASTUGameModeBase::TrackPlayer(AController* Controller) const
 {
-	if (Controller == nullptr) return;
+	if (Controller == nullptr) { return; }
 
 	const auto HealthComponent = STUUtils::GetSTUPlayerComponent<USTUHealthComponent>(Controller->GetPawn());
-	if (HealthComponent == nullptr) return;
+	if (HealthComponent == nullptr) { return; }
 
 	HealthComponent->OnDeath.AddUObject(this, &ASTUGameModeBase::HandlePlayerDeath);
 }
@@ -186,5 +206,6 @@ void ASTUGameModeBase::HandlePlayerDeath(const FDeathData& DeathData) const
 		{
 			VictimState->AddDeath();
 		}
+		RespawnPlayer(DeathData.KilledController);
 	}
 }
