@@ -19,9 +19,15 @@ void USTUCharacterRespawnComponent::Respawn(int32 Timer)
 	                                       true);
 }
 
+bool USTUCharacterRespawnComponent::IsRespawnInProgress() const
+{
+	return GetWorld() && GetWorld()->GetTimerManager().IsTimerActive(RespawnTimerHandle);
+}
+
 void USTUCharacterRespawnComponent::UpdateTimer()
 {
 	if (!GetWorld()) { return; }
+
 	if (--RespawnTimer <= 0)
 	{
 		GetWorld()->GetTimerManager().ClearTimer(RespawnTimerHandle);

@@ -96,8 +96,7 @@ void ASTUGameModeBase::RespawnPlayer(const AController* Controller) const
 {
 	if (!Controller) { return; }
 
-	//TODO: Respawn thresh
-	if (CurrentRoundTimeRemain <= GameData.RespawnTime) { return; }
+	if (CurrentRoundTimeRemain - GameData.RespawnTime < GameData.RoundEndRespawnThresh) { return; }
 
 	const auto RespawnComponent = Controller->FindComponentByClass<USTUCharacterRespawnComponent>();
 

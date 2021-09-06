@@ -19,6 +19,8 @@ public:
 	
 	int32 GetRespawnTimer() const { return RespawnTimer; }
 
+	bool IsRespawnInProgress() const;
+
 private:
 	FTimerHandle RespawnTimerHandle;
 	int32 RespawnTimer;
