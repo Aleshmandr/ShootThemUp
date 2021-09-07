@@ -4,6 +4,8 @@
 #include "STUCharacterMovementComponent.h"
 #include "Camera/CameraComponent.h"
 #include "GameFramework/SpringArmComponent.h"
+#include "Components/SphereComponent.h"
+#include "Components/CapsuleComponent.h"
 
 ASTUPlayerCharacter::ASTUPlayerCharacter(const FObjectInitializer& ObjInitializer): Super(ObjInitializer)
 {
@@ -13,6 +15,49 @@ ASTUPlayerCharacter::ASTUPlayerCharacter(const FObjectInitializer& ObjInitialize
 	SpringArmComponent->SocketOffset = FVector(0.0f, 100.0f, 80.0f);
 	CameraComponent = CreateDefaultSubobject<UCameraComponent>("Camera");
 	CameraComponent->SetupAttachment(SpringArmComponent);
+	CameraCollisionComponent = CreateDefaultSubobject<USphereComponent>("CameraCollision");
+	CameraCollisionComponent->SetupAttachment(CameraComponent);
+	CameraCollisionComponent->SetSphereRadius(20.0f);
+	CameraCollisionComponent->SetCollisionResponseToAllChannels(ECR_Overlap);
+}
+
+void ASTUPlayerCharacter::BeginPlay()
+{
+	Super::BeginPlay();
+	check(CameraCollisionComponent);
+	CameraCollisionComponent->OnComponentBeginOverlap.AddDynamic(this, &ASTUPlayerCharacter::HandleCameraBeginOverlap);
+	CameraCollisionComponent->OnComponentEndOverlap.AddDynamic(this, &ASTUPlayerCharacter::HandleCameraEndOverlap);
+}
+
+
+void ASTUPlayerCharacter::HandleCameraBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
+                                                   UPrimitiveComponent* OtherComp, int32 OtherBodyIndex,
+                                                   bool bFromSweep, const FHitResult& SweepResult)
+{
+	CheckCameraOverlap();
+}
+
+void ASTUPlayerCharacter::HandleCameraEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
+                                                 UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
+{
+	CheckCameraOverlap();
+}
+
+void ASTUPlayerCharacter::CheckCameraOverlap()
+{
+	const auto bHideMesh = CameraCollisionComponent->IsOverlappingComponent(GetCapsuleComponent());
+	GetMesh()->SetOwnerNoSee(bHideMesh);
+
+	TArray<USceneComponent*> MeshChildren;
+	GetMesh()->GetChildrenComponents(true, MeshChildren);
+	for (const auto MeshChild : MeshChildren)
+	{
+		const auto PrimitiveComponent = Cast<UPrimitiveComponent>(MeshChild);
+		if (PrimitiveComponent)
+		{
+			PrimitiveComponent->SetOwnerNoSee(bHideMesh);
+		}
+	}
 }
 
 // Called to bind functionality to input
