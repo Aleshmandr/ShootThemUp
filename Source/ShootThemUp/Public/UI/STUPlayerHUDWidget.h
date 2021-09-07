@@ -28,6 +28,6 @@ public:
 
 private:
 	virtual bool Initialize() override;
-	void HandleRoundStart(int Round);
+	void HandlePlayerPawnChange(APawn* NewPawn);
 	void HandleHealthChange(float Health, float Delta);
 };

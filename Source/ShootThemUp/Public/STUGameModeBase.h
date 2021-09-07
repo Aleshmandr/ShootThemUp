@@ -52,7 +52,8 @@ private:
 	FLinearColor GetTeamColor(int32 TeamId);
 	void SetPlayerColor(AController* Controller) const;
 	void TrackPlayer(AController* Controller) const;
-
+	void GameOver();
+	
 	void LogPlayers() const;
 	void HandlePlayerDeath(const FDeathData& DeathData) const;
 };

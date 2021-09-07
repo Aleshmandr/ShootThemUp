@@ -9,10 +9,7 @@
 #include "GameFramework/Character.h"
 #include "STUBaseCharacter.generated.h"
 
-class UCameraComponent;
-class USpringArmComponent;
 class USTUHealthComponent;
-class UTextRenderComponent;
 class ASTUBaseWeapon;
 class USTUWeaponComponent;
 
@@ -27,21 +24,12 @@ public:
 	ASTUBaseCharacter(const FObjectInitializer& ObjInitializer);
 
 protected:
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category="Components")
-	UCameraComponent* CameraComponent;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category="Components")
-	USpringArmComponent* SpringArmComponent;
-
+	
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category="Components")
 	USTUHealthComponent* HealthComponent;
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category="Components")
 	USTUWeaponComponent* WeaponComponent;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category="Components")
-	UTextRenderComponent* HealthTextComponent;
 
 	UPROPERTY(EditDefaultsOnly, Category="Animation")
 	UAnimMontage* DeathAnimMontage;
@@ -52,25 +40,22 @@ protected:
 
 	virtual void OnDeath(const FDeathData& DeathData);
 
-	void OnHealthChanged(float Health, float Delta) const;
-
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-public:
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
-
-	// Called to bind functionality to input
-	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
-	void SetPlayerColor(const FLinearColor& Color) const;
-
-private:
-	FTimerHandle RagdollTimerHandle;
-	bool WantShift;
 	void MoveForward(float Axis);
 	void MoveRight(float Axis);
 	void StartShift();
 	void StopShift();
 	void ActivateRagdoll();
+
+public:
+	// Called every frame
+	virtual void Tick(float DeltaTime) override;
+	
+	void SetPlayerColor(const FLinearColor& Color) const;
+
+private:
+	FTimerHandle RagdollTimerHandle;
+	bool WantShift;
 };

@@ -13,18 +13,19 @@ bool USTUPlayerHUDWidget::Initialize()
 {
 	if (GetWorld())
 	{
-		const auto STUGameMode = Cast<ASTUGameModeBase>(GetWorld()->GetAuthGameMode());
-		if (STUGameMode)
+		const auto Player = GetOwningPlayer();
+		if(Player)
 		{
-			STUGameMode->OnRoundStarted.AddUObject(this, &USTUPlayerHUDWidget::HandleRoundStart);
+			Player->GetOnNewPawnNotifier().AddUObject(this, &USTUPlayerHUDWidget::HandlePlayerPawnChange);
+			HandlePlayerPawnChange(GetOwningPlayerPawn());
 		}
 	}
 	return Super::Initialize();
 }
 
-void USTUPlayerHUDWidget::HandleRoundStart(int Round)
+void USTUPlayerHUDWidget::HandlePlayerPawnChange(APawn* NewPawn)
 {
-	const auto HealthComponent = STUUtils::GetSTUPlayerComponent<USTUHealthComponent>(GetOwningPlayerPawn());
+	const auto HealthComponent = STUUtils::GetSTUPlayerComponent<USTUHealthComponent>(NewPawn);
 	if (HealthComponent)
 	{
 		HealthComponent->OnHealthChanged.AddUObject(this, &USTUPlayerHUDWidget::HandleHealthChange);
