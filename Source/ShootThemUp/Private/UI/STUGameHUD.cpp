@@ -3,15 +3,24 @@
 
 #include "UI/STUGameHUD.h"
 
+#include "STUGameModeBase.h"
 #include "Engine/Canvas.h"
+
+DEFINE_LOG_CATEGORY_STATIC(LogSTUHud, All, All)
 
 void ASTUGameHUD::BeginPlay()
 {
 	Super::BeginPlay();
-	auto PlayerHUDWidget = CreateWidget<UUserWidget>(GetWorld(), PlayerHudWidgetClass);
-	if(PlayerHudWidgetClass)
+	const auto PlayerHUDWidget = CreateWidget<UUserWidget>(GetWorld(), PlayerHudWidgetClass);
+	if (PlayerHudWidgetClass)
 	{
 		PlayerHUDWidget->AddToViewport();
+	}
+
+	const auto GameMode = Cast<ASTUGameModeBase>(GetWorld()->GetAuthGameMode());
+	if (GameMode)
+	{
+		GameMode->OnMatchStateChanged.AddUObject(this, &ASTUGameHUD::HandleMatchStateChange);
 	}
 }
 
@@ -29,4 +38,9 @@ void ASTUGameHUD::DrawCrossHair()
 	const FLinearColor Color = FLinearColor::Green;
 	DrawLine(CenterX - Radius, CenterY, CenterX + Radius, CenterY, Color, Thickness);
 	DrawLine(CenterX, CenterY - Radius, CenterX, CenterY + Radius, Color, Thickness);
+}
+
+void ASTUGameHUD::HandleMatchStateChange(const EMatchState MatchState)
+{
+	UE_LOG(LogSTUHud, All, TEXT("Match state changed to %s"), *UEnum::GetValueAsString(MatchState));
 }

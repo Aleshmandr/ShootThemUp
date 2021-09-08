@@ -4,7 +4,6 @@
 class UNiagaraSystem;
 class ASTUBaseWeapon;
 
-
 USTRUCT(BlueprintType)
 struct FAmmoData
 {
@@ -121,8 +120,18 @@ struct FGameData
 	TArray<FLinearColor> TeamColors;
 };
 
+UENUM(BlueprintType)
+enum class EMatchState: uint8
+{
+	WaitingToStart,
+	InProgress,
+	Pause,
+	GameOver
+};
+
+DECLARE_MULTICAST_DELEGATE_OneParam(FOnMatchStateChangedSignature, EMatchState);
 DECLARE_MULTICAST_DELEGATE_OneParam(FOnClipEmptySignature, ASTUBaseWeapon*);
 DECLARE_MULTICAST_DELEGATE_OneParam(FOnDeathSignature, const FDeathData&);
 DECLARE_MULTICAST_DELEGATE_TwoParams(FOnHealthChangedSignature, float, float);
 DECLARE_MULTICAST_DELEGATE_OneParam(FOnNotifiedSignature, USkeletalMeshComponent*);
-DECLARE_MULTICAST_DELEGATE_OneParam(FOnRoundStarted, int);
+DECLARE_MULTICAST_DELEGATE_OneParam(FOnRoundStartedSignature, int);

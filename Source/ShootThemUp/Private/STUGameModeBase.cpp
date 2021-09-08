@@ -30,6 +30,7 @@ void ASTUGameModeBase::StartPlay()
 	CreateTeamsInfo();
 	CurrentRound = 0;
 	StartRound();
+	SetMatchState(EMatchState::InProgress);
 }
 
 UClass* ASTUGameModeBase::GetDefaultPawnClassForController_Implementation(AController* InController)
@@ -210,16 +211,24 @@ void ASTUGameModeBase::HandlePlayerDeath(const FDeathData& DeathData) const
 	}
 }
 
+void ASTUGameModeBase::SetMatchState(EMatchState NewMatchState)
+{
+	if (MatchState == NewMatchState) { return; }
+	
+	MatchState = NewMatchState;
+	OnMatchStateChanged.Broadcast(MatchState);
+}
+
 void ASTUGameModeBase::GameOver()
 {
 	for (const auto BaseCharacter : TActorRange<ASTUBaseCharacter>(GetWorld()))
 	{
-		if(BaseCharacter)
+		if (BaseCharacter)
 		{
-			
 		}
 		BaseCharacter->TurnOff();
 		BaseCharacter->DisableInput(nullptr);
 	}
+	SetMatchState(EMatchState::GameOver);
 	UE_LOG(LogSTUGameModeBase, All, TEXT("End game"));
 }

@@ -21,4 +21,5 @@ protected:
 private:
 	virtual void DrawHUD() override;
 	void DrawCrossHair();
+	void HandleMatchStateChange(EMatchState MatchState);
 };
