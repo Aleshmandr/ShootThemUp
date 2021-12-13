@@ -26,6 +26,7 @@ public:
 	int32 GetRoundsCount() const { return GameData.RoundsNum; }
 	int32 GetCurrentRoundTimeRemain() const { return CurrentRoundTimeRemain; }
 	void RequestRespawn(AController* Controller);
+	virtual bool SetPause(APlayerController* PC, FCanUnpause CanUnpauseDelegate) override;
 
 protected:
 	UPROPERTY(EditDefaultsOnly, Category="Game")
@@ -55,7 +56,7 @@ private:
 	void SetPlayerColor(AController* Controller) const;
 	void TrackPlayer(AController* Controller) const;
 	void GameOver();
-	
+
 	void LogPlayers() const;
 	void HandlePlayerDeath(const FDeathData& DeathData) const;
 	void SetMatchState(EMatchState NewMatchState);

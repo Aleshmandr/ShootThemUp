@@ -94,6 +94,16 @@ void ASTUGameModeBase::RequestRespawn(AController* Controller)
 	ResetPlayer(Controller);
 }
 
+bool ASTUGameModeBase::SetPause(APlayerController* MovieSceneBlends, FCanUnpause CanUnpauseDelegate)
+{
+	const auto IsPaused = Super::SetPause(MovieSceneBlends, CanUnpauseDelegate);
+	if (IsPaused)
+	{
+		SetMatchState(EMatchState::Pause);
+	}
+	return IsPaused;
+}
+
 void ASTUGameModeBase::RespawnPlayer(const AController* Controller) const
 {
 	if (!Controller) { return; }
@@ -214,7 +224,7 @@ void ASTUGameModeBase::HandlePlayerDeath(const FDeathData& DeathData) const
 void ASTUGameModeBase::SetMatchState(EMatchState NewMatchState)
 {
 	if (MatchState == NewMatchState) { return; }
-	
+
 	MatchState = NewMatchState;
 	OnMatchStateChanged.Broadcast(MatchState);
 }

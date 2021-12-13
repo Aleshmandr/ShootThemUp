@@ -13,10 +13,16 @@ class SHOOTTHEMUP_API ASTUPlayerController : public APlayerController
 {
 	GENERATED_BODY()
 
+
 public:
 	ASTUPlayerController();
 
 protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Game")
 	USTUCharacterRespawnComponent* RespawnComponent;
+
+	virtual void SetupInputComponent() override;
+
+private:
+	void OnGamePause();
 };
