@@ -11,14 +11,19 @@ DEFINE_LOG_CATEGORY_STATIC(LogSTUHud, All, All)
 void ASTUGameHUD::BeginPlay()
 {
 	Super::BeginPlay();
-	const auto PlayerHUDWidget = CreateWidget<UUserWidget>(GetWorld(), PlayerHudWidgetClass);
-	if (PlayerHudWidgetClass)
+	Widgets.Add(EMatchState::InProgress, CreateWidget<UUserWidget>(GetWorld(), PlayerHudWidgetClass));
+	Widgets.Add(EMatchState::Pause, CreateWidget<UUserWidget>(GetWorld(), GamePauseHudWidgetClass));
+
+	for (const auto WidgetPair : Widgets)
 	{
-		PlayerHUDWidget->AddToViewport();
+		const auto Widget = WidgetPair.Value;
+		if (Widget == nullptr) { continue; }
+
+		Widget->AddToViewport();
+		Widget->SetVisibility(ESlateVisibility::Hidden);
 	}
 
-	const auto GameMode = Cast<ASTUGameModeBase>(GetWorld()->GetAuthGameMode());
-	if (GameMode)
+	if (const auto GameMode = Cast<ASTUGameModeBase>(GetWorld()->GetAuthGameMode()))
 	{
 		GameMode->OnMatchStateChanged.AddUObject(this, &ASTUGameHUD::HandleMatchStateChange);
 	}
@@ -43,4 +48,19 @@ void ASTUGameHUD::DrawCrossHair()
 void ASTUGameHUD::HandleMatchStateChange(const EMatchState MatchState)
 {
 	UE_LOG(LogSTUHud, All, TEXT("Match state changed to %s"), *UEnum::GetValueAsString(MatchState));
+
+	if (CurrentWidget != nullptr)
+	{
+		CurrentWidget->SetVisibility(ESlateVisibility::Hidden);
+	}
+
+	if (Widgets.Contains(MatchState))
+	{
+		CurrentWidget = Widgets[MatchState];
+	}
+
+	if (CurrentWidget != nullptr)
+	{
+		CurrentWidget->SetVisibility(ESlateVisibility::Visible);
+	}
 }

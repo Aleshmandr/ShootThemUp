@@ -16,9 +16,16 @@ class SHOOTTHEMUP_API ASTUGameHUD : public AHUD
 protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="UI")
 	TSubclassOf<UUserWidget> PlayerHudWidgetClass;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="UI")
+	TSubclassOf<UUserWidget> GamePauseHudWidgetClass;
 	
 	virtual void BeginPlay() override;
 private:
+	UPROPERTY()
+	TMap<EMatchState, UUserWidget*> Widgets;
+	UPROPERTY()
+	UUserWidget* CurrentWidget = nullptr;
 	virtual void DrawHUD() override;
 	void DrawCrossHair();
 	void HandleMatchStateChange(EMatchState MatchState);

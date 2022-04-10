@@ -27,6 +27,7 @@ public:
 	int32 GetCurrentRoundTimeRemain() const { return CurrentRoundTimeRemain; }
 	void RequestRespawn(AController* Controller);
 	virtual bool SetPause(APlayerController* PC, FCanUnpause CanUnpauseDelegate) override;
+	virtual bool ClearPause() override;
 
 protected:
 	UPROPERTY(EditDefaultsOnly, Category="Game")

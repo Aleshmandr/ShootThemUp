@@ -104,6 +104,16 @@ bool ASTUGameModeBase::SetPause(APlayerController* MovieSceneBlends, FCanUnpause
 	return IsPaused;
 }
 
+bool ASTUGameModeBase::ClearPause()
+{
+	const bool PauseCleared = Super::ClearPause();
+	if (PauseCleared)
+	{
+		SetMatchState(EMatchState::InProgress);
+	}
+	return PauseCleared;
+}
+
 void ASTUGameModeBase::RespawnPlayer(const AController* Controller) const
 {
 	if (!Controller) { return; }
