@@ -13,6 +13,7 @@ void ASTUGameHUD::BeginPlay()
 	Super::BeginPlay();
 	Widgets.Add(EMatchState::InProgress, CreateWidget<UUserWidget>(GetWorld(), PlayerHudWidgetClass));
 	Widgets.Add(EMatchState::Pause, CreateWidget<UUserWidget>(GetWorld(), GamePauseHudWidgetClass));
+	Widgets.Add(EMatchState::GameOver, CreateWidget<UUserWidget>(GetWorld(), GameOverHudWidgetClass));
 
 	for (const auto WidgetPair : Widgets)
 	{

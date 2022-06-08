@@ -165,6 +165,7 @@ void ASTUGameModeBase::CreateTeamsInfo()
 		TeamId = (++TeamId) % GameData.TeamsCount;
 		PlayerState->SetTeamId(TeamId);
 		PlayerState->SetTeamColor(GetTeamColor(TeamId));
+		PlayerState->SetPlayerName(Controller->IsPlayerController() ? "Player" : "Bot");
 	}
 }
 

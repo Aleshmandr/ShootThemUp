@@ -26,10 +26,6 @@
 			]
 		},
 		{
-			"Name": "RiderLink",
-			"Enabled": false
-		},
-		{
 			"Name": "VisualStudioCodeSourceCodeAccess",
 			"Enabled": false
 		}

@@ -21,4 +21,9 @@ public:
 
 		return Cast<ASTUPlayerState>(Pawn->GetPlayerState());
 	}
+
+	static FText IntToFString(const int Num)
+	{
+		return FText::FromString(FString::FromInt(Num));
+	}
 };
