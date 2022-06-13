@@ -9,8 +9,9 @@
 #include "STUWeaponComponent.h"
 
 
-bool USTUPlayerHUDWidget::Initialize()
+void USTUPlayerHUDWidget::NativeOnInitialized()
 {
+	Super::NativeOnInitialized();
 	if (GetWorld())
 	{
 		const auto Player = GetOwningPlayer();
@@ -20,7 +21,6 @@ bool USTUPlayerHUDWidget::Initialize()
 			HandlePlayerPawnChange(GetOwningPlayerPawn());
 		}
 	}
-	return Super::Initialize();
 }
 
 void USTUPlayerHUDWidget::HandlePlayerPawnChange(APawn* NewPawn)
